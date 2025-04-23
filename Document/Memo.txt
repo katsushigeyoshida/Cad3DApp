@@ -1,0 +1,148 @@
+﻿Cad3DApp : 3D CAD　Mini3DCADを再構成
+
+    Mini3DCadの構成                    Cad3DApp
+        MainWindows                         MainWindows
+            DataManage                          DataManage
+            DataDraw                                DataDraw
+
+
+OpenGL を使う
+    OpenGL (OpenTK 3.x) 
+        NuGet で OpenTK 3.x OpenTK.GLControl 3.xをインストール
+        OpenTK 3.Xを使うときは WindowsFormsにチェックを入れる
+        WindowsFormsHost を使う
+        WindowsFormsHost は一度ツールボックスから設定した後
+        xaml ファイルを再表示してのち 設定する
+    OpenGL (OpenTK 4.x)
+        (OpenTK 4..X は .NET,WPF 用であるが SH67H3では使えない KIRAでは使える)
+        NuGet で OpenTK 4.xと OpenTK.GLWpfControl 4.xをインストール
+        xaml に
+            xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
+
+            <glWpfControl:GLWpfControl x:Name="glControl" Ready="glControl_Ready" Render="glControl_Render"/>
+
+■表示操作
+・タブ表示切り替え(正面図、平面図、側面図、3D表示)
+・2D表示(正面図、平面図、側面図)(データ作成) (scroll, zoom)
+・3D表示 (マウス)(translate,rotate,zoom)
+
+・ドラッギング表示(line,arc,circle,polyline,polygon,rectangle)
+
+■ファイル操作
+・大分類(ツールバー左)
+    追加、名前の変更、削除
+・分類リスト(左リストボックス)
+    追加、名前の変更、削除、コピー、移動
+・データファイルリスト(左から2番目のリストボックス)
+    追加、名前の変更、削除、コピー、移動、プロパティ
+
+■コマンド
+・要素作成(line,arc,polyline,polygon)
+    線分(line)
+    円(circle)
+    円弧(arc)
+    四角(rect)
+    ポリライン(polyline)
+    ポリゴン(polygon)
+・2D要素編集
+    移動(traslate)
+    回転(rotate)
+    オフセット(ofset)
+    反転(mirror)
+    トリム(trim)
+    ストレッチ(stretch)
+    拡大縮小(scale)
+    分解(disassemble) (未)
+    分割(divide)
+    R面(fillet) 線分同士、ポリライン頂点、ポリゴン頂点
+    接続(connet) (未)
+    属性変更(changeProperty) (ツールバー,LeftDoubleClick)
+    一括属性変更(changePropertyAll) 未
+・2Dコピー
+    移動(copyTranslate)
+    回転(copyRotate)
+    オフセット(copyOffset)
+    反転(copyMirror)
+    トリム(copyTrim)
+    拡大縮小(copyScale)
+    要素コピー(copyEntity)　(未)
+    要素貼り付け(copyEntity) (未)
+・3D要素編集
+    押出
+    ブレンド
+    回転体
+    掃引
+    解除
+・設定
+    図面コメント (未)
+    表示レイヤ
+    非表示解除 (未)
+・計測
+    計測 (未)
+    角度 (未)
+    距離・角度 (未)
+・情報 (未)
+・削除
+・アンドゥ
+・ツール (未)
+・キャンセル
+・終了
+
+・属性設定(color)
+・情報関連
+・ツール
+・ファイル(保存・読込)
+・インポート(Mini3DCad読込,DXF)
+・エクスポート(DXF,OBJ,..)
+
+
+・ピック (pick)
+・オートロケイト
+・アンドゥ(OK)、リドゥ
+・レイヤー(2024/12/29)
+・グループ(2025/02/07)
+・ファイル操作(22025/02/02)
+・システム設定
+・3D幾何計算(planeをベースにする)
+・アッセンブル機能(2D,3D)
+
+要素(Entity)
+    線分      Line
+    円弧      Arc
+    折線      Polyline
+    多角形    Polygon
+
+属性(Property)
+    線色
+    線種
+    面色
+    レイヤー
+    グループ
+    2D表示
+    3D表示
+    端面表示
+    逆順(光源対応) (未)
+
+
+ロケイト(Locモード)
+    Left Button         locate  (ロケイト位置、グリッド位置)
+    Right Button        auto locate (分割点、交差点)
+    Ctrl Right Button   menu locate (メニュー )
+    Alt Right Button    cross locate　(2要素以上で交点位置確定)
+    Alt Left Button     polyline/polygopnでの円弧ストレッチ
+
+ピック(Pickモード)
+    Right Button        pick    multi entity → 要素選択メニュー ピック済み要素 → unpick
+    Ctrl Right Button   group pick
+    F7 Left Button      領域ピック
+
+Double CLick            要素属性変更
+Alt + Double Click      データ編集
+
+
+
+問題点
+    円弧を楕円に変換したときの始終角に問題あり(ポリラインの円弧と線分の交点で交点は求まるが
+    楕円上の角度が会わない) Arc3D.toEllipse(), Arc3D.intersection()
+    円弧要素のデータ情報の表示をどう表すか(平面上の角度では位置が不明)
+    Blend での端面と側面の面方向が合わない
