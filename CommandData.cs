@@ -100,7 +100,7 @@
             new Command("設定",       "戻る",         OPERATION.back),
             new Command("計測",       "距離",         OPERATION.measureDistance),
             new Command("計測",       "角度",         OPERATION.measureAngle),
-            new Command("計測",       "距離・角度",   OPERATION.measure),
+            //new Command("計測",       "距離・角度",   OPERATION.measure),
             new Command("計測",       "戻る",         OPERATION.back),
             new Command("情報",       "情報",         OPERATION.info),
             new Command("削除",       "削除",         OPERATION.remove),

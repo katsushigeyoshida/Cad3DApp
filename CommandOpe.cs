@@ -470,7 +470,7 @@ namespace Cad3DApp
                     if (dlg.mEdgeReverseEnable)
                         entity.mEdgeReverse = dlg.mEdgeReverse;
                     if (dlg.mCkkListEnable)
-                        entity.mLayerBit = mLayer.setLayerChkList(entity.mLayerBit, dlg.mChkList);
+                        entity.mLayerBit = mLayer.setLayerChkList(entity.mLayerBit, dlg.mChkList, !dlg.mCkkListAdd);
                     if (dlg.mGroupEnable)
                         entity.mGroup = mGroup.add(dlg.mGroup);
                     entity.mOperationNo = mGlobal.mOperationCount;
@@ -712,7 +712,8 @@ namespace Cad3DApp
 
             string[] strArray = dataList[sp++];
             if (4 < strArray.Length && strArray[0] == "area") {
-                mGlobal.mCopyArea = new Box3D($"{strArray[1]},{strArray[2]},{strArray[3]},{strArray[4]},{strArray[5]},{strArray[6]}");
+                Box b = new Box($"{strArray[1]},{strArray[2]},{strArray[3]},{strArray[4]}");
+                mGlobal.mCopyArea = new Box3D(b, mGlobal.mFace);
                 mGlobal.mCopyArea.normalize();
             }
             while (sp < dataList.Count - 1) {

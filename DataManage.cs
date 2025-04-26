@@ -1,4 +1,5 @@
 ﻿using CoreLib;
+using System.Globalization;
 using System.IO;
 using System.Windows.Controls;
 using Brush = System.Windows.Media.Brush;
@@ -946,6 +947,7 @@ namespace Cad3DApp
         /// <returns>データ位置</returns>
         public int setElementDataList(List<string[]> dataList, int sp)
         {
+            int layerSize = 8;
             while (sp < dataList.Count) {
                 string[] buf = dataList[sp++];
                 try {
@@ -962,15 +964,17 @@ namespace Cad3DApp
                     } else if (buf[0] == "IsShading") {
                         //mBothShading = ylib.boolParse(buf[1]);
                     } else if (buf[0] == "Disp3D") {
-                        //mDisp3D = ylib.boolParse(buf[1]);
+                        mEntityList.Last().mDisp3D = ylib.boolParse(buf[1]);
                     } else if (buf[0] == "Group") {
-                        //mGroup = ylib.intParse(buf[1]);
+                        mEntityList.Last().mGroup = ylib.intParse(buf[1]);
                     } else if (buf[0] == "LayerSize") {
-                        int layerSize = ylib.intParse(buf[1]);
+                        layerSize = ylib.intParse(buf[1]);
                     } else if (buf[0] == "DispLayerBit") {
-                        //for (int i = 0; i < mLayerBit.Length && i < buf.Length - 1; i++) {
-                        //    mLayerBit[i] = byte.Parse(buf[i + 1], NumberStyles.HexNumber);
-                        //}
+                        byte[] layerBit = new byte[layerSize];
+                        for (int i = 0; i < layerBit.Length && i < buf.Length - 1; i++) {
+                            layerBit[i] = byte.Parse(buf[i + 1], NumberStyles.HexNumber);
+                        }
+                        mEntityList.Last().mLayerBit = layerBit;
                     } else if (buf[0] == "ElementEnd") {
                         break;
                     }

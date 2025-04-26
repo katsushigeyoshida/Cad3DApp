@@ -492,6 +492,7 @@ namespace Cad3DApp
                         mPolylines.Add(getPolylineDataList(list));
                     } else if (list[0] == "BlendPolylineData2") {
                         mPolylines.Add(getPolylineDataList(list));
+                        mEdgeDisp = false;
                     } else if (list[0] == "BlendData1") {
                         mPolylines.Add(getPolylineDataList(list, true));
                     } else if (list[0] == "BlendData2") {

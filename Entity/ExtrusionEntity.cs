@@ -72,13 +72,9 @@ namespace Cad3DApp
         /// </summary>
         public override void createSurfaceData()
         {
-            if (mClose) {
-                mSurfaceDataList = createSurface(mPolygons, mVector);
-                mSurfaceDataList.AddRange(createSideSurface(mPolygons, mVector));
-            } else {
-                mSurfaceDataList = createSideSurface(mPolygons, mVector);
-
-            }
+            mSurfaceDataList = createSideSurface(mPolygons, mVector);
+            if (mEdgeDisp)
+                mSurfaceDataList.AddRange(createSurface(mPolygons, mVector));
         }
 
         /// <summary>

@@ -146,3 +146,4 @@ Alt + Double Click      データ編集
     楕円上の角度が会わない) Arc3D.toEllipse(), Arc3D.intersection()
     円弧要素のデータ情報の表示をどう表すか(平面上の角度では位置が不明)
     Blend での端面と側面の面方向が合わない
+    Blendの反転(ミラー)

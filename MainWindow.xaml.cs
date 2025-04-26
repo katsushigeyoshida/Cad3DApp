@@ -837,9 +837,9 @@ namespace Cad3DApp
                                 mOperationMode = OPEMODE.areaPick;
                             }
                             break;
-                        case Key.Escape: commandCancel(); break;     //  ESCキーでキャンセル
-                        case Key.Back: mDataManage.backLoc(); break; //  ロケイト点を一つ戻す
-                        case Key.Apps:                               //  コンテキストメニューキー
+                        case Key.Escape: mDataManage.commandClear(); break; //  ESCキーでキャンセル
+                        case Key.Back: mDataManage.backLoc(); break;        //  ロケイト点を一つ戻す
+                        case Key.Apps:                                      //  コンテキストメニューキー
                             if (mDataManage.locMenu()) {
                                 if (mDataManage.definData(false, ylib.onAltKey()))
                                     commandCancel();
