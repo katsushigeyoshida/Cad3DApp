@@ -56,6 +56,7 @@ namespace Cad3DApp
         public Group mGroup;                                    //  グループ
         public DataDraw mDataDraw;                              //  データ表示
         public GlobalData mGlobal = new GlobalData();           //  グローバル変数
+        public int mSaveOperationCount = 10;                    //  定期保存の操作回数
 
         private EditEntity mEditEntity;                         //  データ要素の変更
         private CreateEntity mCreateEntity;                     //  データ要素の作成
@@ -172,17 +173,19 @@ namespace Cad3DApp
             if (mOperationMode == OPEMODE.clear) {
                 commandClear();
                 if (ope == OPERATION.changeProperty)
-                    layerDlgUpdate();   //  表示レイヤーダイヤログの更新
+                    layerDlgUpdate();           //  表示レイヤーダイヤログの更新
             } else if (mOperationMode == OPEMODE.reload) {
                 return false;
             } else if (mOperationMode == OPEMODE.updateData) {
-                updateData();           //  データ再作成
+                updateData();                   //  データ再作成
                 commandClear();
             } else if (mOperationMode == OPEMODE.exec) {
-                execCommand(ope);       //  ロケイトを必要としないコマンドの実行
+                execCommand(ope);               //  ロケイトを必要としないコマンドの実行
                 commandClear();
             } else
                 return false;
+            if (ope != OPERATION.save && mGlobal.mOperationCount % mSaveOperationCount == 0)
+                saveFile(mDataPath);            //  定期保存
             return true;
         }
 
@@ -1111,6 +1114,7 @@ namespace Cad3DApp
         public void saveFile(string path, bool forth = false)
         {
             if (path.Length == 0) return;
+            //  データ変更の有無
             if (!forth && (mFirstEntityCount == mEntityList.Count &&
                 0 == mGlobal.mOperationCount))
                 return;

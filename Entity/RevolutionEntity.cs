@@ -12,6 +12,7 @@ namespace Cad3DApp
         public double mSa = 0;
         public double mEa = Math.PI * 2;
         public bool mLoop = true;
+        public double mMinDivCount = 4;
 
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace Cad3DApp
             SurfaceData surfaceData;
             //  回転座標作成
             List<List<Point3D>> outLines;
-            outLines = getCenterLineRotate(mCenterLine, mOutLine.toPoint3D(), mDivAngle);
+            outLines = getCenterLineRotate(mCenterLine, mOutLine.toPoint3D(mDivAngle), mDivAngle);
             //  Surfaceの作成
             for (int i = 0; i < outLines.Count - 1; i++) {
                 surfaceData = new SurfaceData();
@@ -106,7 +107,7 @@ namespace Cad3DApp
             mVertexList = new List<Polyline3D> ();
             List<List<Point3D>> outLines;
             double divideAngle = mDivAngle < (Math.PI / 6) ? mDivAngle * 2 : mDivAngle;
-            outLines = getCenterLineRotate(mCenterLine, mOutLine.toPoint3D(), divideAngle);
+            outLines = getCenterLineRotate(mCenterLine, mOutLine.toPoint3D(mDivAngle), divideAngle);
             for (int i = 0; i < outLines.Count; i++)
                 mVertexList.Add(new Polyline3D(outLines[i]));
             for (int i = 0; i < outLines[0].Count; i++) {
@@ -135,6 +136,7 @@ namespace Cad3DApp
             cp.inverse();
             double ang = mSa;
             double dang = divideAngle;
+            if ((mEa - mSa) / dang < mMinDivCount) dang = (mEa - mSa) / mMinDivCount;
             while ((ang - dang) < mEa) {
                 if (mEa < ang)
                     ang = mEa;

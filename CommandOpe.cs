@@ -5,7 +5,6 @@ namespace Cad3DApp
 {
     public class CommandOpe
     {
-        public int mSaveOperationCount = 10;                    //  定期保存の操作回数
         public Layer mLayer;                                    //  レイヤ
         public Group mGroup;                                    //  グループ
         public List<Entity> mEntityList = new List<Entity>();   //  要素リスト
@@ -80,7 +79,7 @@ namespace Cad3DApp
                 case OPERATION.zumenComment: opeMode = zumenComment(); break;
                 case OPERATION.dispLayer: opeMode = OPEMODE.exec; break;
                 case OPERATION.addLayer: break;
-                case OPERATION.disp2DAll: opeMode = OPEMODE.clear; break;
+                case OPERATION.disp2DAll: opeMode = disp2DReset(); break;
                 case OPERATION.measure: opeMode = OPEMODE.clear; break;
                 case OPERATION.info: opeMode = OPEMODE.clear; break;
                 case OPERATION.remove: opeMode = remove(picks); break;
@@ -99,6 +98,7 @@ namespace Cad3DApp
                 case OPERATION.close: opeMode = OPEMODE.close; break;
                 default: opeMode = OPEMODE.clear; break;
             }
+
             return opeMode;
         }
 
@@ -106,6 +106,7 @@ namespace Cad3DApp
         /// ブレンドの作成
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE blend(List<PickData> picks)
         {
             if (1 < picks.Count) {
@@ -119,6 +120,7 @@ namespace Cad3DApp
         /// 回転体の作成
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE revolution(List<PickData> picks)
         {
             if (1 < picks.Count) {
@@ -132,6 +134,7 @@ namespace Cad3DApp
         /// 掃引の作成
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE sweep(List<PickData> picks)
         {
             if (1 < picks.Count) {
@@ -145,6 +148,7 @@ namespace Cad3DApp
         /// フィレット作成
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE fillet(List<PickData> picks)
         {
             if (picks.Count != 0) {
@@ -159,7 +163,7 @@ namespace Cad3DApp
         /// 要素同士の接続(1要素時はポリゴン化)
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
-        /// <returns></returns>
+        /// <returns>OPMODE</returns>
         public OPEMODE connect(List<PickData> picks)
         {
             if (picks.Count != 0) {
@@ -174,7 +178,7 @@ namespace Cad3DApp
         /// ポリラインまたはポリゴンを線分と円弧に分解する
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
-        /// <returns></returns>
+        /// <returns>OPMODE</returns>
         public OPEMODE disassemble(List<PickData> picks)
         {
             if (picks.Count != 0) {
@@ -185,7 +189,15 @@ namespace Cad3DApp
             return OPEMODE.clear;
         }
 
-
+        /// <summary>
+        /// 2D非表示全要素解除
+        /// </summary>
+        /// <returns>OPMODE</returns>
+        public OPEMODE disp2DReset()
+        {
+            mEditEntity.disp2DReset();
+            return OPEMODE.clear;
+        }
 
         /// <summary>
         /// 作成要素を登録し元要素のリンクを作成して削除する
@@ -205,6 +217,7 @@ namespace Cad3DApp
         /// 要素削除
         /// </summary>
         /// <param name="picks">ピック要素リスト</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE remove(List<PickData> picks)
         {
             for (int i = 0; i < picks.Count; i++) {
@@ -218,6 +231,7 @@ namespace Cad3DApp
         /// 解除(押出や回転体を解除して元のポリゴンや線分に戻す)
         /// </summary>
         /// <param name="picks">ピック要素</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE release(List<PickData> picks)
         {
             foreach (PickData pick in picks) {
@@ -256,6 +270,7 @@ namespace Cad3DApp
         /// <summary>
         /// アンドゥ処理
         /// </summary>
+        /// <returns>OPMODE</returns>
         public OPEMODE undo()
         {
             if (0 < mEntityList.Count) {
@@ -274,7 +289,7 @@ namespace Cad3DApp
         /// <summary>
         /// リドゥ処理
         /// </summary>
-        /// <returns></returns>
+        /// <returns>OPEMODE</returns>
         public OPEMODE redo()
         {
             if (0 < mEntityList.Count) {
@@ -307,6 +322,7 @@ namespace Cad3DApp
         /// 要素の共通属性変更
         /// </summary>
         /// <param name="picks">ピック要素</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE changeProperty(List<PickData> picks)
         {
             if (picks != null) {
@@ -325,6 +341,7 @@ namespace Cad3DApp
         /// 要素データの表示・変更(テキスト編集)
         /// </summary>
         /// <param name="picks">ピック要素</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE changeEntityData(List<PickData> picks)
         {
             if (picks != null && picks.Count == 1) {
@@ -442,6 +459,7 @@ namespace Cad3DApp
         /// 要素属性一括変更
         /// </summary>
         /// <param name="picks">要素リスト</param>
+        /// <returns>OPMODE</returns>
         public OPEMODE changePropertyAll(List<PickData> picks)
         {
             PropertyDlg dlg = new PropertyDlg();
@@ -490,6 +508,7 @@ namespace Cad3DApp
         /// システム設定
         /// </summary>
         /// <returns>データフォルダの変更の可否</returns>
+        /// <returns>OPMODE</returns>
         public OPEMODE setSystemProperty()
         {
             OPEMODE result = OPEMODE.non;
@@ -531,6 +550,7 @@ namespace Cad3DApp
         /// <summary>
         /// 図面情報の表示と編集(ダイヤログ表示)
         /// </summary>
+        /// <returns>OPMODE</returns>
         public OPEMODE zumenComment()
         {
             InputBox dlg = new InputBox();

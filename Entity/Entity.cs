@@ -426,6 +426,7 @@ namespace Cad3DApp
             int n = -1;
             int ln = 0;
             for (int i = 0; i < mVertexList.Count; i++) {
+                if (mVertexList[i].mPolyline.Count < 2) continue;
                 PolylineD polyline = mVertexList[i].toPolylineD(face);
                 (int pn, PointD p) = polyline.nearCrossPos(pos);
                 double l = pos.length(p);
@@ -454,6 +455,7 @@ namespace Cad3DApp
             PointD np = new PointD();
             double dis = double.MaxValue;
             for (int i = 0;i < mVertexList.Count; i++) {
+                if (mVertexList[i].mPolyline.Count < 2) continue;
                 PolylineD polyline = mVertexList[i].toPolylineD(face);
                 PointD ip = polyline.nearPoint(pos, divNo);
                 double l = ip.length(pos);

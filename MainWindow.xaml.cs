@@ -560,6 +560,8 @@ namespace Cad3DApp
             if (0 <= index) {
                 //  カレントデータ終了処理
                 mDataManage.saveFile();
+                if (mDataManage.mLayerChkListDlg != null)
+                    mDataManage.mLayerChkListDlg.Close();
                 //  新規データ読込
                 mFileData.mDataName = lbItemList.Items[index].ToString() ?? "";
                 mDataManage.clear(mCurCanvas, mCurImage);

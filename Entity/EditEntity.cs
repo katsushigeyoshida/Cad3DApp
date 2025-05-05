@@ -512,6 +512,14 @@ namespace Cad3DApp
             return entityList;
         }
 
+        /// <summary>
+        /// 2D非表示を全解除
+        /// </summary>
+        public void disp2DReset()
+        {
+            mEntityList.ForEach(p => p.mDisp2D = true);
+        }
+
 
         /// <summary>
         /// 押出データの作成
@@ -524,6 +532,7 @@ namespace Cad3DApp
         public List<Entity> extrusion(List<PickData> pickEntity, Point3D sp, Point3D ep, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
+            if (pickEntity == null || pickEntity.Count == 0) return entityList;
             Point3D v = ep - sp;
             bool circle = false;
             if (mEntityList[pickEntity[0].mEntityNo].mID == EntityId.Arc) {
@@ -569,6 +578,7 @@ namespace Cad3DApp
         public List<Entity> Blend(List<PickData> pickEntity, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
+            if (pickEntity == null || pickEntity.Count == 0) return entityList;
             List<Polyline3D> polylines = getPolyline(pickEntity);
             if (0 < polylines.Count) {
                 BlendEntity blend = new BlendEntity(polylines, mGlobal.mLayerSize);
@@ -592,12 +602,16 @@ namespace Cad3DApp
         public List<Entity> Revolution(List<PickData> pickEntity, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
+            if (pickEntity == null || pickEntity.Count == 0) return entityList;
             RevolutionEntity revolusion;
             Line3D centerLine = null;
             Polyline3D outline = null;
             bool close = false;
             for (int i = 0; i < pickEntity.Count; i++) {
-                if (mEntityList[pickEntity[i].mEntityNo].mID == EntityId.Line) {
+                if (centerLine != null && mEntityList[pickEntity[i].mEntityNo].mID == EntityId.Line) {
+                    Line3D line = ((LineEntity)mEntityList[pickEntity[i].mEntityNo]).mLine.toCopy();
+                    outline = new Polyline3D(line);
+                } else if (mEntityList[pickEntity[i].mEntityNo].mID == EntityId.Line) {
                     centerLine = ((LineEntity)mEntityList[pickEntity[i].mEntityNo]).mLine.toCopy();
                 } else if (mEntityList[pickEntity[i].mEntityNo].mID == EntityId.Polyline) {
                     outline = ((PolylineEntity)mEntityList[pickEntity[i].mEntityNo]).mPolyline;
@@ -631,6 +645,7 @@ namespace Cad3DApp
         public List<Entity> Sweep(List<PickData> pickEntity, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
+            if (pickEntity == null || pickEntity.Count == 0) return entityList;
             SweepEntity sweep;
             Polyline3D outLine1 = null;
             Polyline3D outLine2 = null;
