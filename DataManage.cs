@@ -170,22 +170,32 @@ namespace Cad3DApp
             }
             mOperation = ope;
             mOperationMode = mCommandOpe.execCommand(ope, mLocPick.mPickEntity);
-            if (mOperationMode == OPEMODE.clear) {
-                commandClear();
-                if (ope == OPERATION.changeProperty)
-                    layerDlgUpdate();           //  表示レイヤーダイヤログの更新
-            } else if (mOperationMode == OPEMODE.reload) {
-                return false;
-            } else if (mOperationMode == OPEMODE.updateData) {
-                updateData();                   //  データ再作成
-                commandClear();
-            } else if (mOperationMode == OPEMODE.exec) {
-                execCommand(ope);               //  ロケイトを必要としないコマンドの実行
-                commandClear();
-            } else
-                return false;
+            switch (mOperationMode) {
+                case OPEMODE.clear:
+                    commandClear();
+                    //  表示レイヤーダイヤログの更新
+                    if (ope == OPERATION.changeProperty)
+                        layerDlgUpdate();
+                    break;
+                case OPEMODE.reload:
+                    //  図面の再読み込み
+                    return false;
+                case OPEMODE.updateData:
+                    //  データ再作成
+                    updateData();
+                    commandClear();
+                    break;
+                case OPEMODE.exec:
+                    //  ロケイトを必要としないコマンドの実行
+                    execCommand(ope);
+                    commandClear();
+                    break;
+                default:
+                    return false;
+            }
+            //  定期保存
             if (ope != OPERATION.save && mGlobal.mOperationCount % mSaveOperationCount == 0)
-                saveFile(mDataPath);            //  定期保存
+                saveFile(mDataPath);
             return true;
         }
 
@@ -438,6 +448,59 @@ namespace Cad3DApp
         }
 
         /// <summary>
+        /// キーコマンド処理
+        /// </summary>
+        /// <param name="command">コマンド文字列</param>
+        /// <returns></returns>
+        public bool keyCommand(string command)
+        {
+            KeyCommand keyCommand = new KeyCommand(mGlobal, mEntityList);
+            KeyCommand.EXETYPE exetype = keyCommand.execCommand(command, mGlobal.mFace);
+            switch (exetype) {
+                case KeyCommand.EXETYPE.createEntity:
+                    //  要素作成
+                    mEditEntity.addEntity(keyCommand.mEntity, ++mGlobal.mOperationCount);
+                    updateArea();
+                    commandClear();
+                    break;
+                case KeyCommand.EXETYPE.editEntity:
+                    //  要素編集
+                    foreach (var entity in keyCommand.mEditEntityList)
+                        mEditEntity.addEntity(entity, mGlobal.mOperationCount);
+                    if(!keyCommand.mCopy) {
+                        foreach (var pickEnt in keyCommand.mPickEnt)
+                            mEditEntity.addLink(pickEnt.mEntityNo, mGlobal.mLayerSize, mGlobal.mOperationCount);
+                    }
+                    updateArea();
+                    commandClear();
+                    break;
+                case KeyCommand.EXETYPE.color:
+                    //  カラー設定
+                    mGlobal.mMainWindow.cbColor.SelectedIndex = ylib.getBrushNo(keyCommand.mColor);
+                    break;
+                case KeyCommand.EXETYPE.linetype:
+                    //  線種設定
+                    mGlobal.mLineType = keyCommand.mLineType;
+                    break;
+                case KeyCommand.EXETYPE.undo:
+                    mCommandOpe.undo();
+                    updateArea();
+                    commandClear();
+                    break;
+                case KeyCommand.EXETYPE.redo:
+                    mCommandOpe.redo();
+                    updateArea();
+                    commandClear();
+                    break;
+                case KeyCommand.EXETYPE.close:
+                    mGlobal.mMainWindow.Close();
+                    break;
+                default: return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// ロケイトを必要としないコマンドでダイヤログ表示の必要なコマンドの実行
         /// </summary>
         /// <param name="ope">コマンド</param>
@@ -448,6 +511,7 @@ namespace Cad3DApp
                 case OPERATION.save: saveFile(mDataPath); break;
                 case OPERATION.setColor: setColor(); break;
                 case OPERATION.setGrid: setGrid(); break;
+                case OPERATION.close: mGlobal.mMainWindow.Close(); break;
             }
         }
 
@@ -655,10 +719,10 @@ namespace Cad3DApp
         /// </summary>
         /// <param name="pos">ピック位置</param>
         /// <returns>ピックの有無</returns>
-        public bool pick(PointD pos)
+        public bool pick(PointD pos, bool onCtrl)
         {
             if (mGlobal.mFace == FACE3D.NON) return false;
-            return mLocPick.getPickNo(getWpos(pos), pickBox(pos));
+            return mLocPick.getPickNo(getWpos(pos), pickBox(pos), onCtrl);
         }
 
         /// <summary>
@@ -666,10 +730,10 @@ namespace Cad3DApp
         /// </summary>
         /// <param name="pos">ピック位置</param>
         /// <returns>ピックの有無</returns>
-        public bool locPick(PointD pos)
+        public bool locPick(PointD pos, bool onAlt)
         {
             if (mGlobal.mFace == FACE3D.NON) return false;
-            return mLocPick.getLocPickNo(getWpos(pos), pickBox(pos));
+            return mLocPick.getLocPickNo(getWpos(pos), pickBox(pos), onAlt);
         }
 
         /// <summary>
@@ -688,10 +752,10 @@ namespace Cad3DApp
         /// オートロケイト処理
         /// </summary>
         /// <param name="pos">ロケイト位置</param>
-        public bool autoLocate(PointD pos)
+        public bool autoLocate(PointD pos, bool onCtrl, bool onAlt)
         {
             PointD wpos = mDataDraw.mGDraw.cnvScreen2World(pos);
-            return mLocPick.autoLoc(wpos);
+            return mLocPick.autoLoc(wpos, onCtrl, onAlt);
         }
 
         /// <summary>

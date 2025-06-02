@@ -58,7 +58,9 @@ namespace Cad3DApp
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="mainWindow"></param>
+        /// <param name="mainWindow">MainWindow</param>
+        /// <param name="entityList">要素リスト</param>
+        /// <param name="face">2D平面</param>
         public LockPick(Window mainWindow, List<Entity> entityList, FACE3D face)
         {
             mMainWindow = mainWindow;
@@ -69,7 +71,7 @@ namespace Cad3DApp
         /// <summary>
         /// 表示面を設定
         /// </summary>
-        /// <param name="face"></param>
+        /// <param name="face">2D平面</param>
         public void setCanvasFace(FACE3D face)
         {
             mFace = face;
@@ -89,15 +91,17 @@ namespace Cad3DApp
         /// オートロケイト
         /// </summary>
         /// <param name="pickPos">ピック位置</param>
-        /// <param name="pickSize"></param>
+        /// <param name="pickSize">ピックサイズ</param>
+        /// <param name="onCtrl">Ctrlキー</param>
+        /// <param name="onAlt">Altキー</param>
         /// <returns>ロケイト登録完了</returns>
-        public bool autoLoc(PointD pickPos)
+        public bool autoLoc(PointD pickPos, bool onCtrl, bool onAlt)
         {
             Point3D pos3 = null;
-            if (ylib.onControlKey()) {
+            if (onCtrl) {
                 //  メニュー表示
                 pos3 = locSelect(pickPos, mLocPickEntity, mFace);
-            } else if (ylib.onAltKey()) {
+            } else if (onAlt) {
                 //  別々にピックした２要素の交点(Alt + RightMouse)
                 if (mLocPickEntity.Count == 2) {
                     pos3 = mEntityList[mLocPickEntity[0].mEntityNo].intersection2(
@@ -132,13 +136,14 @@ namespace Cad3DApp
         /// </summary>
         /// <param name="pos">ピック位置</param>
         /// <param name="pickArea">ピック領域</param>
+        /// <param name="onCtrl">Ctrlキー</param>
+        /// <param name="onAlt">Altキー</param>
         /// <returns>ピックの有無</returns>
-        public bool getLocPickNo(PointD pos, Box pickArea)
+        public bool getLocPickNo(PointD pos, Box pickArea, bool onAlt)
         {
             List<PickData> pickList = getPickList(pos, pickArea);
-            bool alt = ylib.onAltKey();
             int pickNo = 0;
-            if (alt && 1 < pickList.Count) {
+            if (onAlt && 1 < pickList.Count) {
                 pickNo = pickSelect(pickList);
                 if (pickNo < 0) return false;
                 mLocPickEntity.Add(pickList[0]);
@@ -153,12 +158,14 @@ namespace Cad3DApp
         /// </summary>
         /// <param name="pos">ピック位置</param>
         /// <param name="pickSize">ピックサイズ</param>
+        /// <param name="onCtrl">Ctrlキー</param>
+        /// <param name="area">領域指定</param>
         /// <returns>ピックの有無</returns>
-        public bool getPickNo(PointD pos, Box pickArea, bool area = false)
+        public bool getPickNo(PointD pos, Box pickArea, bool ctrl, bool area = false)
         {
             List<PickData> pickList = getPickList(pos, pickArea);
             if (pickList.Count == 0) return false;
-            bool ctrl = ylib.onControlKey();
+            //bool ctrl = ylib.onControlKey();
             int pickNo = -1;
             //  複数ピックの時の要素選択
             if (1 < pickList.Count && !area)
@@ -375,16 +382,16 @@ namespace Cad3DApp
             dlg.mMenuList = locMenu;
             dlg.ShowDialog();
             if (0 < dlg.mResultMenu.Length) {
-                getInputLoc(dlg.mResultMenu, operation);
+                getInputLoc(dlg.mResultMenu);
             }
         }
 
         /// <summary>
         /// ロケイトメニュー処理
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="operation"></param>
-        private void getInputLoc(string title, OPERATION operation)
+        /// <param name="title">選択メニューのタイトル</param>
+        /// <param name="operation">操作</param>
+        private void getInputLoc(string title)
         {
             InputBox dlg = new InputBox();
             dlg.Owner = mMainWindow;

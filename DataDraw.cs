@@ -178,7 +178,7 @@ namespace Cad3DApp
         /// <param name="wp">領域の中心座標</param>
         /// <param name="opeMode">操作モード</param>
         /// <returns>操作結果</returns>
-        public bool areaOpe(PointD pos, OPEMODE opeMode)
+        public bool areaOpe(PointD pos, OPEMODE opeMode, bool onCtrl)
         {
             PointD wpos = mGDraw.cnvScreen2World(pos);
 
@@ -197,7 +197,7 @@ namespace Cad3DApp
                         } else if (opeMode == OPEMODE.areaPick) {
                             //  領域ピック
                             PointD pickPos = dispArea.getCenter();
-                            if (!mLocPick.getPickNo(pickPos, dispArea, true))
+                            if (!mLocPick.getPickNo(pickPos, dispArea, onCtrl,  true))
                                 return false;
                             //  ピック色表示
                             mLocPick.setPick();

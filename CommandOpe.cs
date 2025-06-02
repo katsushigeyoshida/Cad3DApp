@@ -95,7 +95,7 @@ namespace Cad3DApp
                 case OPERATION.back: opeMode = OPEMODE.clear; break;
                 case OPERATION.save: opeMode = OPEMODE.exec; break;
                 case OPERATION.cancel: opeMode = OPEMODE.clear; break;
-                case OPERATION.close: opeMode = OPEMODE.close; break;
+                case OPERATION.close: opeMode = OPEMODE.exec; break;
                 default: opeMode = OPEMODE.clear; break;
             }
 
@@ -110,7 +110,7 @@ namespace Cad3DApp
         public OPEMODE blend(List<PickData> picks)
         {
             if (1 < picks.Count) {
-                List<Entity> entityList = mEditEntity.Blend(picks, true);
+                List<Entity> entityList = mEditEntity.blend(picks, true);
                 addEntity(entityList, picks);
             }
             return OPEMODE.clear;
@@ -124,7 +124,7 @@ namespace Cad3DApp
         public OPEMODE revolution(List<PickData> picks)
         {
             if (1 < picks.Count) {
-                List<Entity> entityList = mEditEntity.Revolution(picks, true);
+                List<Entity> entityList = mEditEntity.revolution(picks, 0, Math.PI * 2,true);
                 addEntity(entityList, picks);
             }
             return OPEMODE.clear;
@@ -138,7 +138,7 @@ namespace Cad3DApp
         public OPEMODE sweep(List<PickData> picks)
         {
             if (1 < picks.Count) {
-                List<Entity> entityList = mEditEntity.Sweep(picks, true);
+                List<Entity> entityList = mEditEntity.sweep(picks, 0, Math.PI * 2, true);
                 addEntity(entityList, picks);
             }
             return OPEMODE.clear;
@@ -234,36 +234,9 @@ namespace Cad3DApp
         /// <returns>OPMODE</returns>
         public OPEMODE release(List<PickData> picks)
         {
-            foreach (PickData pick in picks) {
-                Entity entity = mEntityList[pick.mEntityNo];
-                if (entity.mID == EntityId.Extrusion) {
-                    //  押出解除
-                    ExtrusionEntity extrusion = (ExtrusionEntity)entity;
-                    foreach (var polygon in extrusion.mPolygons) {
-                        if (extrusion.mClose) {
-                            mEditEntity.addEntity(mCreateEntity.createPolygon(polygon, true), mGlobal.mOperationCount);
-                        } else {
-                            mEditEntity.addEntity(mCreateEntity.createPolyline(polygon.toPolyline3D(0, false), true), mGlobal.mOperationCount);
-                        }
-                    }
-                } else if (entity.mID == EntityId.Blend) {
-                    //  ブレンド解除
-                    BlendEntity blend = (BlendEntity)entity;
-                    foreach (var polyline in blend.mPolylines)
-                        mEditEntity.addEntity(mCreateEntity.createPolyline(polyline, true), mGlobal.mOperationCount);
-                } else if (entity.mID == EntityId.Revolution) {
-                    //  回転体解除
-                    RevolutionEntity revolution = (RevolutionEntity)entity;
-                    mEditEntity.addEntity(mCreateEntity.createLine(revolution.mCenterLine, true), mGlobal.mOperationCount);
-                    mEditEntity.addEntity(mCreateEntity.createPolyline(revolution.mOutLine, true), mGlobal.mOperationCount);
-                } else if (entity.mID == EntityId.Sweep) {
-                    //  掃引解除
-                    SweepEntity sweep = (SweepEntity)entity;
-                    mEditEntity.addEntity(mCreateEntity.createPolyline(sweep.mOutLine1, true), mGlobal.mOperationCount);
-                    mEditEntity.addEntity(mCreateEntity.createPolyline(sweep.mOutLine2, true), mGlobal.mOperationCount);
-                }
-                mEditEntity.addLink(pick.mEntityNo, mGlobal.mLayerSize, mGlobal.mOperationCount);
-            }
+            List<Entity> entityList = mEditEntity.release(picks);
+            if (0 < entityList.Count)
+                addEntity(entityList, picks);
             return OPEMODE.clear;
         }
 

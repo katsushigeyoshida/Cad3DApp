@@ -39,6 +39,26 @@ namespace Cad3DApp
         }
 
         /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="outline1">外形線1</param>
+        /// <param name="outline2">外形線2</param>
+        /// <param name="sa">始角</param>
+        /// <param name="ea">終角</param>
+        /// <param name="close">閉領域</param>
+        /// <param name="layersize">レイヤーサイズ</param>
+        public SweepEntity(Polyline3D outline1, Polyline3D outline2, double sa, double ea, bool close, int layersize)
+        {
+            mID = EntityId.Sweep;
+            mLayerBit = new byte[layersize / 8];
+            mOutLine1 = outline1.toCopy();
+            mOutLine2 = outline2.toCopy();
+            mSa = sa;
+            mEa = ea;
+            mLoop = close;
+        }
+
+        /// <summary>
         /// コピーを作成
         /// </summary>
         /// <returns>Entity</returns>

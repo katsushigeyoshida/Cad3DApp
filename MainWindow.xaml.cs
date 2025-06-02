@@ -274,7 +274,7 @@ namespace Cad3DApp
             Point pos = e.GetPosition(mCurCanvas);
             if (mOperationMode == OPEMODE.areaDisp || mOperationMode == OPEMODE.areaPick) {
                 //  領域表示
-                if (mDataManage.mDataDraw.areaOpe(new PointD(pos), mOperationMode))
+                if (mDataManage.mDataDraw.areaOpe(new PointD(pos), mOperationMode, ylib.onControlKey()))
                     mOperationMode = mPrevOpeMode;
             }
             if (mOperationMode == OPEMODE.loc) {
@@ -311,17 +311,17 @@ namespace Cad3DApp
                 mDataManage.setBaseLoc(cbBaseLoc.IsChecked == true);
                 //  オートロケイト
                 bool lastloc = false;
-                if (!mDataManage.locPick(new PointD(pos))) {
+                if (!mDataManage.locPick(new PointD(pos), ylib.onAltKey())) {
                     //  空ピックの場合コマンド実行(Polyline,Polygon)
                     lastloc = true;
                 } else
-                    if (!mDataManage.autoLocate(new PointD(pos)))
+                    if (!mDataManage.autoLocate(new PointD(pos), ylib.onControlKey(), ylib.onAltKey()))
                         return;
                 if (mDataManage.definData(lastloc, ylib.onAltKey()))
                     commandCancel();
             } else if (mOperationMode == OPEMODE.pick) {
                 //  ピック
-                if (mDataManage.pick(new PointD(pos)))
+                if (mDataManage.pick(new PointD(pos), ylib.onControlKey()))
                     mDataManage.draw();
             }
             dispStatus(mDataManage.getWpos(new PointD(pos)));
@@ -390,7 +390,7 @@ namespace Cad3DApp
         {
             if (mOperationMode == OPEMODE.pick) {
                 Point pos = e.GetPosition(mCurCanvas);
-                if (mDataManage.pick(new PointD(pos))) {
+                if (mDataManage.pick(new PointD(pos), ylib.onControlKey())) {
                     if (ylib.onAltKey())
                         mDataManage.commandExec(OPERATION.changeEntityData);    //  要素データ表示
                     else
@@ -434,9 +434,7 @@ namespace Cad3DApp
                         commandCancel();
                     } else {
                         mOperationMode = mDataManage.mOperationMode;
-                        if (mOperationMode == OPEMODE.close)            //  終了
-                            Close();
-                        else if (mOperationMode == OPEMODE.reload) {    //  図面構成再取込み
+                        if (mOperationMode == OPEMODE.reload) {    //  図面構成再取込み
                             mFileData.setBaseDataFolder();
                             setDataFileList();
                         }
@@ -770,11 +768,28 @@ namespace Cad3DApp
             }
         }
 
+        /// <summary>
+        /// キーコマンド入力コンボホックス
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbCommand_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-
+            if (e.Key == Key.Enter) {
+                if (mDataManage.keyCommand(cbCommand.Text)) {
+                    if (cbCommand.Items.Contains(cbCommand.Text))
+                        cbCommand.Items.Remove(cbCommand.Text);
+                    cbCommand.Items.Insert(0, cbCommand.Text);
+                }
+                btDummy.Focus();         //  ダミーでフォーカスを外す
+            }
         }
 
+        /// <summary>
+        /// フィレットサイズ設定コンボボックスのキー入力
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbFilletSize_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter) {
@@ -788,6 +803,11 @@ namespace Cad3DApp
             }
         }
 
+        /// <summary>
+        /// フィレットサイズコンボホックス　サイズ選択
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbFilletSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int index = cbFilletSize.SelectedIndex;
@@ -795,6 +815,7 @@ namespace Cad3DApp
                 mDataManage.mGlobal.mFilletSize = mFilletSizeMenu[index];
             btDummy.Focus();         //  ダミーでフォーカスを外す
         }
+
 
         private void cbBaseLoc_Click(object sender, RoutedEventArgs e)
         {
@@ -839,6 +860,7 @@ namespace Cad3DApp
                                 mOperationMode = OPEMODE.areaPick;
                             }
                             break;
+                        case Key.F12: cbCommand.Focus(); break;     //  コマンド入力ぽっくにフォーカス
                         case Key.Escape: mDataManage.commandClear(); break; //  ESCキーでキャンセル
                         case Key.Back: mDataManage.backLoc(); break;        //  ロケイト点を一つ戻す
                         case Key.Apps:                                      //  コンテキストメニューキー

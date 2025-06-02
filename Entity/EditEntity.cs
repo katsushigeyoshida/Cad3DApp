@@ -9,6 +9,8 @@ namespace Cad3DApp
     {
         public GlobalData mGlobal = new GlobalData();
         public List<Entity> mEntityList;
+
+        private CreateEntity mCreateEntity;
         private double mEps = 1E-8;
 
         /// <summary>
@@ -19,6 +21,7 @@ namespace Cad3DApp
         {
             mGlobal = global;
             mEntityList = entityList;
+            mCreateEntity = new CreateEntity(global);
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Cad3DApp
         }
 
         /// <summary>
-        /// 要素の回転
+        /// 要素の回転(3点指定)
         /// </summary>
         /// <param name="pickEntity">ピック要素</param>
         /// <param name="cp">回転中心</param>
@@ -57,8 +60,22 @@ namespace Cad3DApp
         /// <returns>編集要素リスト</returns>
         public List<Entity> rotate(List<PickData> pickEntity, Point3D cp, Point3D sp, Point3D ep, FACE3D face, bool surface)
         {
+            double ang = cp.toPoint(face).angle2(sp.toPoint(face), ep.toPoint(face));
+            return rotate(pickEntity, cp, ang, face, surface);
+        }
+
+        /// <summary>
+        /// 要素の回転(角度指定)
+        /// </summary>
+        /// <param name="pickEntity">ピック要素</param>
+        /// <param name="cp">回転中心</param>
+        /// <param name="ang">回転角</param>
+        /// <param name="face">2D平面</param>
+        /// <param name="surface">3Dデータの作成</param>
+        /// <returns>編集要素リスト</returns>
+        public List<Entity> rotate(List<PickData> pickEntity, Point3D cp, double ang, FACE3D face, bool surface)
+        {
             List<Entity> entityList = new List<Entity>();
-            double ang = cp.toPoint(face).angle2(sp.toPoint(face), ep.toPoint(face)); ;
             foreach (var pick in pickEntity) {
                 Entity entity = mEntityList[pick.mEntityNo].toCopy();
                 entity.rotate(cp, -ang, pick.mPos, face);
@@ -575,7 +592,7 @@ namespace Cad3DApp
         /// <param name="pickEntity">ピック要素</param>
         /// <param name="surface">3Dデータの作成</param>
         /// <returns>要素リスト</returns>
-        public List<Entity> Blend(List<PickData> pickEntity, bool surface = false)
+        public List<Entity> blend(List<PickData> pickEntity, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
             if (pickEntity == null || pickEntity.Count == 0) return entityList;
@@ -597,9 +614,11 @@ namespace Cad3DApp
         /// 回転体データの作成
         /// </summary>
         /// <param name="pickEntity">ピック要素</param>
+        /// <param name="sa">終角</param>
+        /// <param name="ea">終角</param>
         /// <param name="surface">3Dデータの作成</param>
         /// <returns>要素リスト</returns>
-        public List<Entity> Revolution(List<PickData> pickEntity, bool surface = false)
+        public List<Entity> revolution(List<PickData> pickEntity, double sa, double ea, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
             if (pickEntity == null || pickEntity.Count == 0) return entityList;
@@ -625,7 +644,7 @@ namespace Cad3DApp
             }
 
             if (centerLine != null && outline != null)
-                revolusion = new RevolutionEntity(centerLine, outline, close, mGlobal.mLayerSize);
+                revolusion = new RevolutionEntity(centerLine, outline, sa, ea, close, mGlobal.mLayerSize);
             else
                 return entityList;
             revolusion.copyProperty(mEntityList[pickEntity[1].mEntityNo]);
@@ -640,9 +659,11 @@ namespace Cad3DApp
         /// 掃引データの作成
         /// </summary>
         /// <param name="pickEntity">ピック要素</param>
+        /// <param name="sa">終角</param>
+        /// <param name="ea">終角</param>
         /// <param name="surface">3Dデータ作成</param>
         /// <returns>要素リスト</returns>
-        public List<Entity> Sweep(List<PickData> pickEntity, bool surface = false)
+        public List<Entity> sweep(List<PickData> pickEntity,　double sa, double ea, bool surface = false)
         {
             List<Entity> entityList = new List<Entity>();
             if (pickEntity == null || pickEntity.Count == 0) return entityList;
@@ -659,7 +680,7 @@ namespace Cad3DApp
             }
 
             if (outLine1 != null && outLine2 != null)
-                sweep = new SweepEntity(outLine1, outLine2, close, mGlobal.mLayerSize);
+                sweep = new SweepEntity(outLine1, outLine2, sa, ea, close, mGlobal.mLayerSize);
             else
                 return entityList;
             sweep.copyProperty(mEntityList[pickEntity[1].mEntityNo]);
@@ -721,6 +742,49 @@ namespace Cad3DApp
             }
             return polylines;
         }
+
+        /// <summary>
+        /// 3D要素の解除
+        /// </summary>
+        /// <param name="pickEntity">要素リスト</param>
+        /// <returns></returns>
+        public List<Entity> release(List<PickData> pickEntity)
+        {
+            List<Entity> entities = new List<Entity>();
+            foreach (PickData pick in pickEntity) {
+                Entity entity = mEntityList[pick.mEntityNo];
+                if (entity.mID == EntityId.Extrusion) {
+                    //  押出解除
+                    ExtrusionEntity extrusion = (ExtrusionEntity)entity;
+                    foreach (var polygon in extrusion.mPolygons) {
+                        if (extrusion.mClose) {
+                            entities.Add(mCreateEntity.createPolygon(polygon, true));
+                        } else {
+                            entities.Add(mCreateEntity.createPolyline(polygon.toPolyline3D(0, false), true));
+                        }
+                    }
+                } else if (entity.mID == EntityId.Blend) {
+                    //  ブレンド解除
+                    BlendEntity blend = (BlendEntity)entity;
+                    foreach (var polyline in blend.mPolylines)
+                        entities.Add(mCreateEntity.createPolyline(polyline, true));
+                } else if (entity.mID == EntityId.Revolution) {
+                    //  回転体解除
+                    RevolutionEntity revolution = (RevolutionEntity)entity;
+                    entities.Add(mCreateEntity.createLine(revolution.mCenterLine, true));
+                    entities.Add(mCreateEntity.createPolyline(revolution.mOutLine, true));
+                } else if (entity.mID == EntityId.Sweep) {
+                    //  掃引解除
+                    SweepEntity sweep = (SweepEntity)entity;
+                    entities.Add(mCreateEntity.createPolyline(sweep.mOutLine1, true));
+                    entities.Add(mCreateEntity.createPolyline(sweep.mOutLine2, true));
+                }
+            }
+            foreach (Entity entity in entities)
+                entity.setArea();
+            return entities;
+        }
+
 
         /// <summary>
         /// 要素の登録

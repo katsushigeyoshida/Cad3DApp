@@ -44,6 +44,26 @@ namespace Cad3DApp
         }
 
         /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="centerLine">中心線</param>
+        /// <param name="polyline">外形線</param>
+        /// <param name="sa">始角</param>
+        /// <param name="ea">終角</param>
+        /// <param name="close">閉領域</param>
+        /// <param name="layersize">レイヤーサイズ</param>
+        public RevolutionEntity(Line3D centerLine, Polyline3D polyline, double sa, double ea, bool close, int layersize)
+        {
+            mID = EntityId.Revolution;
+            mLayerBit = new byte[layersize / 8];
+            mCenterLine = centerLine.toCopy();
+            mOutLine = polyline.toCopy();
+            mSa = sa;
+            mEa = ea;
+            mLoop = close;
+        }
+
+        /// <summary>
         /// コピーを作成
         /// </summary>
         /// <returns>Entity</returns>
