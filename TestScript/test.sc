@@ -1,0 +1,14 @@
+﻿a = 1+1;
+println(a);
+cad.setLineType("solid");
+cad.setLineThickness(1);
+cad.setColor("Green");
+cad.line(0,0,0,10,5,2);
+cad.disp();
+sp[] = { 10,0,0 };
+ep[] = { 20,5,10 };
+cad.setColor("Blue");
+cad.setLineType("dash");
+cad.setLineThickness(5);
+cad.line(sp[],ep[]);
+cad.disp();

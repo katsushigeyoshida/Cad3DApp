@@ -11,9 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icon\charactergrowfont.png" />
+    <None Remove="Icon\charactershrinkfont.png" />
     <None Remove="Icon\copy.png" />
     <None Remove="Icon\cut.png" />
+    <None Remove="Icon\Document.png" />
     <None Remove="Icon\EditManifest.png" />
+    <None Remove="Icon\FolderOpened.png" />
     <None Remove="Icon\Highlighter.png" />
     <None Remove="Icon\MenuItem.png" />
     <None Remove="Icon\OpenFile.png" />
@@ -23,6 +27,7 @@
     <None Remove="Icon\Save.png" />
     <None Remove="Icon\SaveAs.png" />
     <None Remove="Icon\Screenshot.png" />
+    <None Remove="Icon\Search.png" />
     <None Remove="Icon\select-all.png" />
     <None Remove="Icon\Select.png" />
     <None Remove="Icon\SelectAll.png" />
@@ -47,11 +52,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Icon\charactergrowfont.png" />
+    <Resource Include="Icon\charactershrinkfont.png" />
+    <Resource Include="Icon\Document.png" />
+    <Resource Include="Icon\FolderOpened.png" />
+    <Resource Include="Icon\Search.png" />
     <Resource Include="Icon\TogglePivot.png" />
     <Resource Include="Icon\ToggleWorld.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="Unofficial.OpenTK" Version="3.0.21" />
     <PackageReference Include="Unofficial.OpenTK.GLControl" Version="3.0.21" />
   </ItemGroup>

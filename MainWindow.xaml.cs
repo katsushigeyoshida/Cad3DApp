@@ -148,6 +148,8 @@ namespace Cad3DApp
         {
             if (mDataManage.mLayerChkListDlg != null)
                 mDataManage.mLayerChkListDlg.Close();
+            if (mDataManage.mCommandOpe.mScriptEdit != null)
+                mDataManage.mCommandOpe.mScriptEdit.Close();
             mDataManage.saveFile();
             WindowFormSave();
         }

@@ -8,11 +8,12 @@ namespace Cad3DApp
         public Layer mLayer;                                    //  レイヤ
         public Group mGroup;                                    //  グループ
         public List<Entity> mEntityList = new List<Entity>();   //  要素リスト
-        public GlobalData mGlobal;
-        public FileData mFileData;
+        public GlobalData mGlobal;                              //  グローバルデータ
+        public FileData mFileData;                              //  図面ファイル
 
         public bool mOriginalDataText = false;                  //  要素データを生データでテキスト化
         public InputBox mMemoDlg = null;                        //  メモダイヤログ
+        public ScriptEdit mScriptEdit;                          //  スクリプトダイヤログ
 
         private EditEntity mEditEntity;                         //  データ要素の変更
         private CreateEntity mCreateEntity;                     //  データ要素の作成
@@ -92,6 +93,7 @@ namespace Cad3DApp
                 case OPERATION.systemProperty: opeMode = setSystemProperty(); break;
                 case OPERATION.imageTrimming: opeMode = OPEMODE.clear; break;
                 case OPERATION.memo: opeMode = zumenMemo(); break;
+                case OPERATION.scriptEdit: opeMode = scriptEdit(); break;
                 case OPERATION.back: opeMode = OPEMODE.clear; break;
                 case OPERATION.save: opeMode = OPEMODE.exec; break;
                 case OPERATION.cancel: opeMode = OPEMODE.clear; break;
@@ -571,6 +573,19 @@ namespace Cad3DApp
                     mGlobal.mOperationCount++;
                 }
             }
+        }
+
+        /// <summary>
+        /// スクリプト編集ダイヤログの表示
+        /// </summary>
+        /// <returns></returns>
+        public OPEMODE scriptEdit()
+        {
+            if (mScriptEdit != null)
+                mScriptEdit.Close();
+            mScriptEdit = new ScriptEdit(mEntityList, mGlobal);
+            mScriptEdit.Show();
+            return OPEMODE.clear;
         }
 
         /// <summary>

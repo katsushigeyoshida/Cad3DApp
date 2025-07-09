@@ -57,11 +57,11 @@ namespace Cad3DApp
         public DataDraw mDataDraw;                              //  データ表示
         public GlobalData mGlobal = new GlobalData();           //  グローバル変数
         public int mSaveOperationCount = 10;                    //  定期保存の操作回数
+        public CommandOpe mCommandOpe;                         //  コマンド処理
 
         private EditEntity mEditEntity;                         //  データ要素の変更
         private CreateEntity mCreateEntity;                     //  データ要素の作成
         private LockPick mLocPick;                              //  ロケイト・ピック処理
-        private CommandOpe mCommandOpe;                         //  コマンド処理
         private double mPickSize = 10;                          //  ピック領域の大きさ
         private int mFirstEntityCount = 0;                      //  編集開始時の要素数
 

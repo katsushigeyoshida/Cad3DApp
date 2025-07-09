@@ -22,6 +22,7 @@
         measure, measureDistance, measureAngle,
         zumenComment, dispLayer, addLayer, removeLayer, disp2DAll, disp3DAll, info,
         remove, undo, redo,
+        ecriptExec, scriptEdit,
         setGrid, setColor,
         screenCopy, screenSave, imageTrimming, memo,
         save, load, back, cancel, close, systemProperty
@@ -111,6 +112,7 @@
             new Command("ツール",     "画面コピー",   OPERATION.screenCopy),
             //new Command("ツール",     "画面保存",     OPERATION.screenSave),
             //new Command("ツール",    "イメージトリミング", OPERATION.imageTrimming),
+            new Command("ツール",     "スクリプト編集",OPERATION.scriptEdit),
             new Command("ツール",     "メモ",         OPERATION.memo),
             new Command("ツール",     "戻る",         OPERATION.back),
             new Command("キャンセル", "キャンセル",   OPERATION.cancel),
