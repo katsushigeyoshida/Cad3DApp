@@ -25,6 +25,7 @@ namespace Cad3DApp
         private byte[] mSrcHash;                //  スクリプトの読み込み時ハッシュコード
 
         private RingBuffer<string> mOutBuffer = new RingBuffer<string>(2000);   //  出力表示のバッファ
+        private int mSearchWordIndex = 0;       //  検索開始位置
 
         public List<Entity> mEntityList = new List<Entity>();   //  要素リスト
         public GlobalData mGlobal;                              //  グローバルデータ
@@ -181,12 +182,55 @@ namespace Cad3DApp
                 closeCheck();
                 string path = cbScriptFile.SelectedItem.ToString();
                 mScriptPath = Path.Combine(mScriptFolder, path) + ".sc";
-                cbScriptFile.Items.Remove(path);
-                cbScriptFile.Items.Insert(0, path);
-                if (0 < index)
+                if (0 < index) {
+                    cbScriptFile.Items.Remove(path);
+                    cbScriptFile.Items.Insert(0, path);
                     cbScriptFile.SelectedIndex = 0;
-                cbScriptFile.Text = path;
+                    //cbScriptFile.Text = path;
+                }
                 loadScript(mScriptPath);
+            }
+        }
+
+
+        private void cbScriptFileMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = (MenuItem)e.Source;
+            if (0 < mScriptPath.Length && File.Exists(mScriptPath)) {
+                if (menuItem.Name.CompareTo("cbScriptFileCopyMenu") == 0) {
+                    //  ファイルコピー
+                    string destFolder = ylib.folderSelect("コピー先フォルダ", mScriptFolder);
+                    if (0 < destFolder.Length) {
+                        string destPath = Path.Combine(destFolder, Path.GetFileName(mScriptPath));
+                        File.Copy(mScriptPath, destPath);
+                    }
+                } else if (menuItem.Name.CompareTo("cbScriptFileMoveMenu") == 0) {
+                    //  ファイル移動
+                    string destFolder = ylib.folderSelect("移動先フォルダ", mScriptFolder);
+                    if (0 < destFolder.Length) {
+                        string destPath = Path.Combine(destFolder, Path.GetFileName(mScriptPath));
+                        File.Move(mScriptPath, destPath);
+                        mScriptPath = "";
+                    }
+                } else if (menuItem.Name.CompareTo("cbScriptFileRemoveMenu") == 0) {
+                    //  ファイル削除
+                    if (ylib.messageBox(this, Path.GetFileName(mScriptPath) + " を削除", "", "確認") == MessageBoxResult.OK) {
+                        File.Delete(mScriptPath);
+                        mScriptPath = "";
+                    }
+                } else if (menuItem.Name.CompareTo("cbScriptFileRenameMenu") == 0) {
+                    //  ファイル名変更
+                    InputBox dlg = new InputBox();
+                    dlg.Title = "ファイル名の変更";
+                    dlg.mEditText = Path.GetFileNameWithoutExtension(mScriptPath);
+                    if (dlg.ShowDialog() == true) {
+                        string destPath = Path.Combine(mScriptFolder, dlg.mEditText) + ".sc";
+                        File.Move(mScriptPath, destPath);
+                        mScriptPath = destPath;
+                    }
+                }
+                setScriptFilrList(mScriptFolder);
+                setTitle();
             }
         }
 
@@ -227,7 +271,7 @@ namespace Cad3DApp
                 if (mScript.mControlData.mPause)
                     outMessage("Pause\n");
             } else if (button.Name.CompareTo("btSearch") == 0) {
-                //search();
+                search();
             } else if (button.Name.CompareTo("btHelp") == 0) {
                 //ylib.openUrl(mHelpFile);
             }
@@ -242,7 +286,7 @@ namespace Cad3DApp
             avalonEditor.Text = "";
             mScriptPath = "";
             setTitle();
-            //mSearchWordIndex = 0;
+            mSearchWordIndex = 0;
         }
 
         /// <summary>
@@ -446,6 +490,7 @@ namespace Cad3DApp
                 ylib.saveTextFile(mScriptPath, avalonEditor.Text);
                 mScriptFolder = Path.GetDirectoryName(mScriptPath);
                 setHash(avalonEditor.Text);
+                setScriptFilrList(mScriptFolder);
                 setTitle();
             }
         }
@@ -469,7 +514,7 @@ namespace Cad3DApp
         {
             if ((mSrcHash != null && !compareHash(avalonEditor.Text)) ||
                 (mSrcHash == null && 0 < avalonEditor.Text.Length)) {
-                if (System.Windows.MessageBox.Show("内容が変更されていますが保存しますか?", "確認", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                if (System.Windows.MessageBox.Show("内容が変更されていますが保存しますか?", "スクリプト編集", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
                     save();
                 }
             }
@@ -562,5 +607,29 @@ namespace Cad3DApp
                 }
             }
         }
+
+        /// <summary>
+        /// 検索
+        /// </summary>
+        private void search()
+        {
+            string searchWord = cbSearchWord.Text;
+            if (avalonEditor.Text.Length <= mSearchWordIndex)
+                mSearchWordIndex = 0;
+            int index = avalonEditor.Text.IndexOf(searchWord, mSearchWordIndex);
+            if (index != -1) {
+                avalonEditor.Select(index, searchWord.Length);
+                mSearchWordIndex = index + searchWord.Length;
+                int lineCount = 0;
+                for (int i = 0; i < index; i++) {
+                    if (avalonEditor.Text[i] == '\n')
+                        lineCount++;
+                }
+                avalonEditor.ScrollToLine(lineCount);
+            } else {
+                mSearchWordIndex = 0;
+            }
+        }
+
     }
 }

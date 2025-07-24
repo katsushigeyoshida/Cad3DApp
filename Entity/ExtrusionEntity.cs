@@ -405,9 +405,9 @@ namespace Cad3DApp
             List<string[]> dataList = new List<string[]>();
             List<string> buf = new List<string>() {
                 "PolygonData",
-                "Cp", polygon.mCp.x.ToString(), polygon.mCp.y.ToString(), polygon.mCp.z.ToString(),
-                "U", polygon.mU.x.ToString(), polygon.mU.y.ToString(), polygon.mU.z.ToString(),
-                "V", polygon.mV.x.ToString(), polygon.mV.y.ToString(), polygon.mV.z.ToString(),
+                "Cp", polygon.mPlane.mCp.x.ToString(), polygon.mPlane.mCp.y.ToString(), polygon.mPlane.mCp.z.ToString(),
+                "U", polygon.mPlane.mU.x.ToString(), polygon.mPlane.mU.y.ToString(), polygon.mPlane.mU.z.ToString(),
+                "V", polygon.mPlane.mV.x.ToString(), polygon.mPlane.mV.y.ToString(), polygon.mPlane.mV.z.ToString(),
                 "Size", polygon.mPolygon.Count.ToString(),
             };
             dataList.Add(buf.ToArray());
@@ -442,17 +442,17 @@ namespace Cad3DApp
                     polygon = new Polygon3D();
                     for (int i = 1; i < dataList[sp].Length; i++) {
                         if (dataList[sp][i] == "Cp") {
-                            polygon.mCp.x = ylib.doubleParse(dataList[sp][++i]);
-                            polygon.mCp.y = ylib.doubleParse(dataList[sp][++i]);
-                            polygon.mCp.z = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mCp.x = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mCp.y = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mCp.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "U") {
-                            polygon.mU.x = ylib.doubleParse(dataList[sp][++i]);
-                            polygon.mU.y = ylib.doubleParse(dataList[sp][++i]);
-                            polygon.mU.z = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mU.x = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mU.y = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mU.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "V") {
-                            polygon.mV.x = ylib.doubleParse(dataList[sp][++i]);
-                            polygon.mV.y = ylib.doubleParse(dataList[sp][++i]);
-                            polygon.mV.z = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mV.x = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mV.y = ylib.doubleParse(dataList[sp][++i]);
+                            polygon.mPlane.mV.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Size") {
                             int size = ylib.intParse(dataList[sp][++i]);
                         }
@@ -530,19 +530,19 @@ namespace Cad3DApp
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polygon.mCp = p;
+                    polygon.mPlane.mCp = p;
                 } else if (list[i] == "U") {
                     Point3D p = new Point3D();
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polygon.mU = p;
+                    polygon.mPlane.mU = p;
                 } else if (list[i] == "V") {
                     Point3D p = new Point3D();
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polygon.mV = p;
+                    polygon.mPlane.mV = p;
                 } else if (list[i] == "Size") {
                     count = ylib.intParse(list[++i]);
                 } else if (list[i] == "Multi") {
@@ -580,19 +580,19 @@ namespace Cad3DApp
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polygon.mCp = p;
+                    polygon.mPlane.mCp = p;
                 } else if (list[i] == "U") {
                     Point3D p = new Point3D();
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polygon.mU = p;
+                    polygon.mPlane.mU = p;
                 } else if (list[i] == "V") {
                     Point3D p = new Point3D();
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polygon.mV = p;
+                    polygon.mPlane.mV = p;
                 } else if (list[i] == "Size") {
                     count = ylib.intParse(list[++i]);
                 } else if (list[i] == "Multi") {

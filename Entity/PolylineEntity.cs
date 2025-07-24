@@ -249,9 +249,9 @@ namespace Cad3DApp
             List<string[]> dataList = new List<string[]>();
             List<string> buf = new List<string>() {
                 "PolylineData",
-                "Cp", mPolyline.mCp.x.ToString(), mPolyline.mCp.y.ToString(), mPolyline.mCp.z.ToString(),
-                "U", mPolyline.mU.x.ToString(), mPolyline.mU.y.ToString(), mPolyline.mU.z.ToString(),
-                "V", mPolyline.mV.x.ToString(), mPolyline.mV.y.ToString(), mPolyline.mV.z.ToString(),
+                "Cp", mPolyline.mPlane.mCp.x.ToString(), mPolyline.mPlane.mCp.y.ToString(), mPolyline.mPlane.mCp.z.ToString(),
+                "U", mPolyline.mPlane.mU.x.ToString(), mPolyline.mPlane.mU.y.ToString(), mPolyline.mPlane.mU.z.ToString(),
+                "V", mPolyline.mPlane.mV.x.ToString(), mPolyline.mPlane.mV.y.ToString(), mPolyline.mPlane.mV.z.ToString(),
                 "Size", mPolyline.mPolyline.Count.ToString(),
             };
             dataList.Add(buf.ToArray());
@@ -279,17 +279,17 @@ namespace Cad3DApp
                 if (dataList[sp][0] == "PolylineData") {
                     for (int i = 1; i < dataList[sp].Length; i++) {
                         if (dataList[sp][i] == "Cp") {
-                            mPolyline.mCp.x = ylib.doubleParse(dataList[sp][++i]);
-                            mPolyline.mCp.y = ylib.doubleParse(dataList[sp][++i]);
-                            mPolyline.mCp.z = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mCp.x = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mCp.y = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mCp.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "U") {
-                            mPolyline.mU.x = ylib.doubleParse(dataList[sp][++i]);
-                            mPolyline.mU.y = ylib.doubleParse(dataList[sp][++i]);
-                            mPolyline.mU.z = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mU.x = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mU.y = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mU.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "V") {
-                            mPolyline.mV.x = ylib.doubleParse(dataList[sp][++i]);
-                            mPolyline.mV.y = ylib.doubleParse(dataList[sp][++i]);
-                            mPolyline.mV.z = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mV.x = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mV.y = ylib.doubleParse(dataList[sp][++i]);
+                            mPolyline.mPlane.mV.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Size") {
                             size = ylib.intParse(dataList[sp][++i]);
                         }
@@ -332,19 +332,19 @@ namespace Cad3DApp
                         p.x = ylib.doubleParse(list[++i]);
                         p.y = ylib.doubleParse(list[++i]);
                         p.z = ylib.doubleParse(list[++i]);
-                        mPolyline.mCp = p;
+                        mPolyline.mPlane.mCp = p;
                     } else if (list[i] == "U") {
                         Point3D p = new Point3D();
                         p.x = ylib.doubleParse(list[++i]);
                         p.y = ylib.doubleParse(list[++i]);
                         p.z = ylib.doubleParse(list[++i]);
-                        mPolyline.mU = p;
+                        mPolyline.mPlane.mU = p;
                     } else if (list[i] == "V") {
                         Point3D p = new Point3D();
                         p.x = ylib.doubleParse(list[++i]);
                         p.y = ylib.doubleParse(list[++i]);
                         p.z = ylib.doubleParse(list[++i]);
-                        mPolyline.mV = p;
+                        mPolyline.mPlane.mV = p;
                     } else if (list[i] == "Size") {
                         count = ylib.intParse(list[++i]);
                     } else if (list[i] == "Multi") {

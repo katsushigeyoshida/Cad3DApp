@@ -10,7 +10,16 @@
         <DockPanel>
             <ToolBarTray DockPanel.Dock="Top">
                 <ToolBar Height="30">
-                    <ComboBox Name="cbScriptFile" Width="100" MouseDoubleClick="cbScriptFile_MouseDoubleClick" SelectionChanged="cbScriptFile_SelectionChanged" />
+                    <ComboBox Name="cbScriptFile" Width="100" MouseDoubleClick="cbScriptFile_MouseDoubleClick" SelectionChanged="cbScriptFile_SelectionChanged" >
+                        <ComboBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="コピー" Name="cbScriptFileCopyMenu" Click="cbScriptFileMenu_Click" />
+                                <MenuItem Header="移動" Name="cbScriptFileMoveMenu" Click="cbScriptFileMenu_Click" />
+                                <MenuItem Header="削除" Name="cbScriptFileRemoveMenu" Click="cbScriptFileMenu_Click" />
+                                <MenuItem Header="名称変更" Name="cbScriptFileRenameMenu" Click="cbScriptFileMenu_Click" />
+                            </ContextMenu>
+                        </ComboBox.ContextMenu>
+                    </ComboBox>
                 </ToolBar>
                 <ToolBar>
                     <Button x:Name="btNew" ToolTip="新規 Ctrl+N" Width="25" Height="25" Click="Button_Click"   >

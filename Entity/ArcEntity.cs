@@ -128,7 +128,7 @@ namespace Cad3DApp
         /// <param name="face">2D平面</param>
         public override void scale(Point3D cp, double scale, PointD pickPos, FACE3D face)
         {
-            mArc.mCp.scale(cp, scale);
+            mArc.mPlane.mCp.scale(cp, scale);
             mArc.mR *= scale;
         }
 
@@ -209,9 +209,9 @@ namespace Cad3DApp
                 string[] buf = dataList[n++].Split(',');
                 int i = 0;
                 if (buf[i].Trim() == "中心") {
-                    mArc.mCp.x = ylib.doubleParse(buf[++i]);
-                    mArc.mCp.y = ylib.doubleParse(buf[++i]);
-                    mArc.mCp.z = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mCp.x = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mCp.y = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mCp.z = ylib.doubleParse(buf[++i]);
                 } else if (buf[i].Trim() == "半径") {
                     mArc.mR = ylib.doubleParse(buf[++i]);
                 } else if (buf[i].Trim() == "始角") {
@@ -219,13 +219,13 @@ namespace Cad3DApp
                 } else if (buf[i].Trim() == "終角") {
                     mArc.mEa = ylib.D2R(ylib.doubleParse(buf[++i]));
                 } else if (buf[i].Trim() == "面U") {
-                    mArc.mU.x = ylib.doubleParse(buf[++i]);
-                    mArc.mU.y = ylib.doubleParse(buf[++i]);
-                    mArc.mU.z = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mU.x = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mU.y = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mU.z = ylib.doubleParse(buf[++i]);
                 } else if (buf[i].Trim() == "面V") {
-                    mArc.mV.x = ylib.doubleParse(buf[++i]);
-                    mArc.mV.y = ylib.doubleParse(buf[++i]);
-                    mArc.mV.z = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mV.x = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mV.y = ylib.doubleParse(buf[++i]);
+                    mArc.mPlane.mV.z = ylib.doubleParse(buf[++i]);
                 }
             }
         }
@@ -240,12 +240,12 @@ namespace Cad3DApp
             Point3D ep = mArc.endPosition();
             List<string> dataList = new List<string> {
                 "ArcData",
-                $"中心, {mArc.mCp.x.ToString()}, {mArc.mCp.y.ToString()}, {mArc.mCp.z.ToString()},",
+                $"中心, {mArc.mPlane.mCp.x.ToString()}, {mArc.mPlane.mCp.y.ToString()}, {mArc.mPlane.mCp.z.ToString()},",
                 $"半径, {mArc.mR}",
                 $"始角, {ylib.R2D(mArc.mSa)}",
                 $"終角, {ylib.R2D(mArc.mEa)}",
-                $"面U,  {mArc.mU.x.ToString()}.{mArc.mU.y.ToString()}, {mArc.mU.z.ToString()},",
-                $"面V,  {mArc.mV.x.ToString()}.{mArc.mV.y.ToString()}, {mArc.mV.z.ToString()},",
+                $"面U,  {mArc.mPlane.mU.x.ToString()}.{mArc.mPlane.mU.y.ToString()}, {mArc.mPlane.mU.z.ToString()},",
+                $"面V,  {mArc.mPlane.mV.x.ToString()}.{mArc.mPlane.mV.y.ToString()}, {mArc.mPlane.mV.z.ToString()},",
                 $"参考",
                 $"始点, {sp.x.ToString()}.{sp.y.ToString()}, {sp.z.ToString()},",
                 $"中点, {mp.x.ToString()}.{mp.y.ToString()}, {mp.z.ToString()},",
@@ -264,10 +264,10 @@ namespace Cad3DApp
             List<string[]> dataList = new List<string[]>();
             dataList.Add(new string[] {
                 "ArcData",
-                "Cp", mArc.mCp.x.ToString(), mArc.mCp.y.ToString(), mArc.mCp.z.ToString(),
+                "Cp", mArc.mPlane.mCp.x.ToString(), mArc.mPlane.mCp.y.ToString(), mArc.mPlane.mCp.z.ToString(),
                 "R", mArc.mR.ToString(),
-                "U", mArc.mU.x.ToString(), mArc.mU.y.ToString(), mArc.mU.z.ToString(),
-                "V", mArc.mV.x.ToString(), mArc.mV.y.ToString(), mArc.mV.z.ToString(),
+                "U", mArc.mPlane.mU.x.ToString(), mArc.mPlane.mU.y.ToString(), mArc.mPlane.mU.z.ToString(),
+                "V", mArc.mPlane.mV.x.ToString(), mArc.mPlane.mV.y.ToString(), mArc.mPlane.mV.z.ToString(),
                 "Sa", mArc.mSa.ToString(),
                 "Ea", mArc.mEa.ToString()
             });
@@ -287,19 +287,19 @@ namespace Cad3DApp
                 if (dataList[sp][0] == "ArcData") {
                     for (int i = 1; i < dataList[sp].Length; i++) {
                         if (dataList[sp][i] == "Cp") {
-                            mArc.mCp.x = ylib.doubleParse(dataList[sp][++i]);
-                            mArc.mCp.y = ylib.doubleParse(dataList[sp][++i]);
-                            mArc.mCp.z = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mCp.x = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mCp.y = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mCp.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "R") {
                             mArc.mR = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "U") {
-                            mArc.mU.x = ylib.doubleParse(dataList[sp][++i]);
-                            mArc.mU.y = ylib.doubleParse(dataList[sp][++i]);
-                            mArc.mU.z = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mU.x = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mU.y = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mU.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "V") {
-                            mArc.mV.x = ylib.doubleParse(dataList[sp][++i]);
-                            mArc.mV.y = ylib.doubleParse(dataList[sp][++i]);
-                            mArc.mV.z = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mV.x = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mV.y = ylib.doubleParse(dataList[sp][++i]);
+                            mArc.mPlane.mV.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Sa") {
                             mArc.mSa = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Ea") {
@@ -327,19 +327,19 @@ namespace Cad3DApp
                 double val;
                 for (int i = 1; i < list.Length; i++) {
                     if (list[i] == "Cp") {
-                        mArc.mCp.x = ylib.doubleParse(list[++i]);
-                        mArc.mCp.y = ylib.doubleParse(list[++i]);
-                        mArc.mCp.z = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mCp.x = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mCp.y = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mCp.z = ylib.doubleParse(list[++i]);
                     } else if (list[i] == "R") {
                         mArc.mR = ylib.doubleParse(list[++i]);
                     } else if (list[i] == "U") {
-                        mArc.mU.x = ylib.doubleParse(list[++i]);
-                        mArc.mU.y = ylib.doubleParse(list[++i]);
-                        mArc.mU.z = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mU.x = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mU.y = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mU.z = ylib.doubleParse(list[++i]);
                     } else if (list[i] == "V") {
-                        mArc.mV.x = ylib.doubleParse(list[++i]);
-                        mArc.mV.y = ylib.doubleParse(list[++i]);
-                        mArc.mV.z = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mV.x = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mV.y = ylib.doubleParse(list[++i]);
+                        mArc.mPlane.mV.z = ylib.doubleParse(list[++i]);
                     } else if (list[i] == "Sa") {
                         mArc.mSa = ylib.doubleParse(list[++i]);
                     } else if (list[i] == "Ea") {

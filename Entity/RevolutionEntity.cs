@@ -367,9 +367,9 @@ namespace Cad3DApp
             });
             List<string> buf = new List<string>() {
                 "OutlineData",
-                "Cp", mOutLine.mCp.x.ToString(), mOutLine.mCp.y.ToString(), mOutLine.mCp.z.ToString(),
-                "U", mOutLine.mU.x.ToString(), mOutLine.mU.y.ToString(), mOutLine.mU.z.ToString(),
-                "V", mOutLine.mV.x.ToString(), mOutLine.mV.y.ToString(), mOutLine.mV.z.ToString(),
+                "Cp", mOutLine.mPlane.mCp.x.ToString(), mOutLine.mPlane.mCp.y.ToString(), mOutLine.mPlane.mCp.z.ToString(),
+                "U", mOutLine.mPlane.mU.x.ToString(), mOutLine.mPlane.mU.y.ToString(), mOutLine.mPlane.mU.z.ToString(),
+                "V", mOutLine.mPlane.mV.x.ToString(), mOutLine.mPlane.mV.y.ToString(), mOutLine.mPlane.mV.z.ToString(),
                 "Sa", mSa.ToString(),
                 "Ea", mEa.ToString(),
                 "Loop", mLoop.ToString(),
@@ -413,17 +413,17 @@ namespace Cad3DApp
                 } else if (dataList[sp][0] == "OutlineData") {
                     for (int i = 1; i < dataList[sp].Length; i++) {
                         if (dataList[sp][i] == "Cp") {
-                            mOutLine.mCp.x = ylib.doubleParse(dataList[sp][++i]);
-                            mOutLine.mCp.y = ylib.doubleParse(dataList[sp][++i]);
-                            mOutLine.mCp.z = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mCp.x = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mCp.y = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mCp.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "U") {
-                            mOutLine.mU.x = ylib.doubleParse(dataList[sp][++i]);
-                            mOutLine.mU.y = ylib.doubleParse(dataList[sp][++i]);
-                            mOutLine.mU.z = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mU.x = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mU.y = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mU.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "V") {
-                            mOutLine.mV.x = ylib.doubleParse(dataList[sp][++i]);
-                            mOutLine.mV.y = ylib.doubleParse(dataList[sp][++i]);
-                            mOutLine.mV.z = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mV.x = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mV.y = ylib.doubleParse(dataList[sp][++i]);
+                            mOutLine.mPlane.mV.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Sa") {
                             mSa = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Ea") {
@@ -493,19 +493,19 @@ namespace Cad3DApp
                         p.x = ylib.doubleParse(list[++i]);
                         p.y = ylib.doubleParse(list[++i]);
                         p.z = ylib.doubleParse(list[++i]);
-                        mOutLine.mCp = p;
+                        mOutLine.mPlane.mCp = p;
                     } else if (list[i] == "OutLineU") {
                         Point3D p = new Point3D();
                         p.x = ylib.doubleParse(list[++i]);
                         p.y = ylib.doubleParse(list[++i]);
                         p.z = ylib.doubleParse(list[++i]);
-                        mOutLine.mU = p;
+                        mOutLine.mPlane.mU = p;
                     } else if (list[i] == "OutLineV") {
                         Point3D p = new Point3D();
                         p.x = ylib.doubleParse(list[++i]);
                         p.y = ylib.doubleParse(list[++i]);
                         p.z = ylib.doubleParse(list[++i]);
-                        mOutLine.mV = p;
+                        mOutLine.mPlane.mV = p;
                     } else if (list[i] == "OutLineSize") {
                         count = ylib.intParse(list[++i]);
                     } else if (list[i] == "Multi") {

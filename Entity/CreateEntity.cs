@@ -416,5 +416,91 @@ namespace Cad3DApp
             polygon.createVertexData();
             return polygon;
         }
+
+        /// <summary>
+        /// 押出要素の作成
+        /// </summary>
+        /// <param name="polygons">ポリゴンリスト</param>
+        /// <param name="v">押出ベクトル</param>
+        /// <param name="surface">3Dデータ作成</param>
+        /// <returns>押出要素</returns>
+        public Entity createExtrusion(List<Polygon3D> polygons, Point3D v, bool surface = false)
+        {
+            ExtrusionEntity extrusion = new ExtrusionEntity(polygons, v, mGlobal.mLayerSize);
+            extrusion.mLineThickness = mGlobal.mLineThickness;
+            extrusion.mLineType = mGlobal.mLineType;
+            extrusion.mLineColor = mGlobal.mEntityBrush;
+            extrusion.mFaceColor = mGlobal.mEntityBrush;
+            if (surface)
+                extrusion.createSurfaceData();
+            extrusion.createVertexData();
+            return extrusion;
+        }
+
+        /// <summary>
+        /// ブレンド要素の作成
+        /// </summary>
+        /// <param name="polylines">ポリラインリスト</param>
+        /// <param name="surface">3Dデータ作成</param>
+        /// <returns>ブレンド要素</returns>
+        public Entity createBlend(List<Polyline3D> polylines, bool surface = false)
+        {
+            BlendEntity blend = new BlendEntity(polylines, mGlobal.mLayerSize);
+            blend.mLineThickness = mGlobal.mLineThickness;
+            blend.mLineType = mGlobal.mLineType;
+            blend.mLineColor = mGlobal.mEntityBrush;
+            blend.mFaceColor = mGlobal.mEntityBrush;
+            blend.createVertexData();
+            if (surface)
+                blend.createSurfaceData();
+            return blend;
+        }
+
+        /// <summary>
+        /// 回転体要素の作成
+        /// </summary>
+        /// <param name="centerLine">回転中心線</param>
+        /// <param name="outline">外形線</param>
+        /// <param name="sa">開始角</param>
+        /// <param name="ea">終了角</param>
+        /// <param name="close">閉領域</param>
+        /// <param name="surface">3Dデータ作成</param>
+        /// <returns>回転体要素</returns>
+        public Entity createRevolution(Line3D centerLine, Polyline3D outline, double sa, double ea, bool close, bool surface = false)
+        {
+            RevolutionEntity revolusion = new RevolutionEntity(centerLine, outline, sa, ea, close, mGlobal.mLayerSize);
+            revolusion.mLineThickness = mGlobal.mLineThickness;
+            revolusion.mLineType = mGlobal.mLineType;
+            revolusion.mLineColor = mGlobal.mEntityBrush;
+            revolusion.mFaceColor = mGlobal.mEntityBrush;
+            if (surface)
+                revolusion.createSurfaceData();
+            revolusion.createVertexData();
+            return revolusion;
+        }
+
+        /// <summary>
+        /// 掃引(スゥイープ)要素の作成
+        /// </summary>
+        /// <param name="outLine1">外形線1</param>
+        /// <param name="outLine2">外形線2</param>
+        /// <param name="sa">開始角</param>
+        /// <param name="ea">終了角</param>
+        /// <param name="close">閉領域</param>
+        /// <param name="surface">3Dデータ作成</param>
+        /// <returns>掃引要素</returns>
+        public Entity createSweep(Polyline3D outLine1, Polyline3D outLine2, double sa, double ea, bool close, bool surface = false)
+        {
+            SweepEntity sweep = new SweepEntity(outLine1, outLine2, sa, ea, close, mGlobal.mLayerSize);
+            sweep.mLineThickness = mGlobal.mLineThickness;
+            sweep.mLineType = mGlobal.mLineType;
+            sweep.mLineColor = mGlobal.mEntityBrush;
+            sweep.mFaceColor = mGlobal.mEntityBrush;
+            if (surface)
+                sweep.createSurfaceData();
+            sweep.createVertexData();
+            return sweep;
+        }
+
     }
 }

@@ -412,9 +412,9 @@ namespace Cad3DApp
             List<string[]> dataList = new List<string[]>();
             List<string> buf = new List<string>() {
                 "PolylineData",
-                "Cp", polyline.mCp.x.ToString(), polyline.mCp.y.ToString(), polyline.mCp.z.ToString(),
-                "U", polyline.mU.x.ToString(), polyline.mU.y.ToString(), polyline.mU.z.ToString(),
-                "V", polyline.mV.x.ToString(), polyline.mV.y.ToString(), polyline.mV.z.ToString(),
+                "Cp", polyline.mPlane.mCp.x.ToString(), polyline.mPlane.mCp.y.ToString(), polyline.mPlane.mCp.z.ToString(),
+                "U", polyline.mPlane.mU.x.ToString(), polyline.mPlane.mU.y.ToString(), polyline.mPlane.mU.z.ToString(),
+                "V", polyline.mPlane.mV.x.ToString(), polyline.mPlane.mV.y.ToString(), polyline.mPlane.mV.z.ToString(),
                 "Size", polyline.mPolyline.Count.ToString(),
             };
             dataList.Add(buf.ToArray());
@@ -443,17 +443,17 @@ namespace Cad3DApp
                     polyline = new Polyline3D();
                     for (int i = 1; i < dataList[sp].Length; i++) {
                         if (dataList[sp][i] == "Cp") {
-                            polyline.mCp.x = ylib.doubleParse(dataList[sp][++i]);
-                            polyline.mCp.y = ylib.doubleParse(dataList[sp][++i]);
-                            polyline.mCp.z = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mCp.x = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mCp.y = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mCp.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "U") {
-                            polyline.mU.x = ylib.doubleParse(dataList[sp][++i]);
-                            polyline.mU.y = ylib.doubleParse(dataList[sp][++i]);
-                            polyline.mU.z = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mU.x = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mU.y = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mU.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "V") {
-                            polyline.mV.x = ylib.doubleParse(dataList[sp][++i]);
-                            polyline.mV.y = ylib.doubleParse(dataList[sp][++i]);
-                            polyline.mV.z = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mV.x = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mV.y = ylib.doubleParse(dataList[sp][++i]);
+                            polyline.mPlane.mV.z = ylib.doubleParse(dataList[sp][++i]);
                         } else if (dataList[sp][i] == "Size") {
                             int size = ylib.intParse(dataList[sp][++i]);
                         }
@@ -527,19 +527,19 @@ namespace Cad3DApp
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polyline.mCp = p;
+                    polyline.mPlane.mCp = p;
                 } else if (list[i] == "U") {
                     Point3D p = new Point3D();
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polyline.mU = p;
+                    polyline.mPlane.mU = p;
                 } else if (list[i] == "V") {
                     Point3D p = new Point3D();
                     p.x = ylib.doubleParse(list[++i]);
                     p.y = ylib.doubleParse(list[++i]);
                     p.z = ylib.doubleParse(list[++i]);
-                    polyline.mV = p;
+                    polyline.mPlane.mV = p;
                 } else if (list[i] == "Size") {
                     count = ylib.intParse(list[++i]);
                 } else if (list[i] == "Multi") {

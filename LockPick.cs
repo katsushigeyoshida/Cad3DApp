@@ -355,7 +355,7 @@ namespace Cad3DApp
                 case "垂点": pos3 = ent.nearPoint(lastLoc.toPoint(face), 0, face); break;
                 case "中心点":
                     ArcEntity arcEnt = (ArcEntity)ent;
-                    pos3 = arcEnt.mArc.mCp;
+                    pos3 = arcEnt.mArc.mPlane.mCp;
                     break;
             }
             return pos3;

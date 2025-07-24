@@ -447,7 +447,7 @@ namespace Cad3DApp
         }
 
         /// <summary>
-        /// タブの切り替え
+        /// タブ(作成面)の切り替え
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -457,30 +457,43 @@ namespace Cad3DApp
             if (mCurCanvas == null || mCurImage == null ||
                 item == null || mDataManage == null) return;
             bt3DDispReset.IsEnabled = false;
-            if (item.Name == "CanvasFRONT") {
-                mDataManage.setFace(FACE3D.FRONT);
-                mCurCanvas = cvCanvasFRONT;
-                mCurImage = imScreenFRONT;
-            } else if (item.Name == "CanvasTOP") {
-                mDataManage.setFace(FACE3D.TOP);
-                mCurCanvas = cvCanvasTOP;
-                mCurImage = imScreenTOP;
-            } else if (item.Name == "CanvasRIGHT") {
-                mDataManage.setFace(FACE3D.RIGHT);
-                mCurCanvas = cvCanvasRIGHT;
-                mCurImage = imScreenRIGHT;
-            } else if (item.Name == "OpenGL") {
-                mDataManage.setFace(FACE3D.NON);
-                bt3DDispReset.IsEnabled = true;
-            } else
+            if (!setFace(item.Name))
                 return;
-            if (item.Name != "OpenGL") {
-                mDataManage.setCanvas(mCurCanvas, mCurImage);
-                mDataManage.draw(false, false);
-            }
             dispStatus(null);
             btDummy.Focus();                //  ダミーでフォーカスを外す
         }
+
+        /// <summary>
+        /// 作成面を設定
+        /// </summary>
+        /// <param name="faceName"></param>
+        /// <returns></returns>
+        public bool setFace(string faceName)
+        {
+            if (faceName == "CanvasFRONT") {
+                mDataManage.setFace(FACE3D.FRONT);
+                mCurCanvas = cvCanvasFRONT;
+                mCurImage = imScreenFRONT;
+            } else if (faceName == "CanvasTOP") {
+                mDataManage.setFace(FACE3D.TOP);
+                mCurCanvas = cvCanvasTOP;
+                mCurImage = imScreenTOP;
+            } else if (faceName == "CanvasRIGHT") {
+                mDataManage.setFace(FACE3D.RIGHT);
+                mCurCanvas = cvCanvasRIGHT;
+                mCurImage = imScreenRIGHT;
+            } else if (faceName == "OpenGL") {
+                mDataManage.setFace(FACE3D.NON);
+                bt3DDispReset.IsEnabled = true;
+            } else
+                return false;
+            if (faceName != "OpenGL") {
+                mDataManage.setCanvas(mCurCanvas, mCurImage);
+                mDataManage.draw(false, false);
+            }
+            return true;
+        }
+
 
         /// <summary>
         /// コマンドのキャンセル(初期状態)
