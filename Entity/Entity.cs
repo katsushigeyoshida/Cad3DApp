@@ -51,6 +51,8 @@ namespace Cad3DApp
         /// <param name="face">表示 2D平面</param>
         public void draw2D(YWorldDraw draw, FACE3D face)
         {
+            if (mVertexList == null)
+                return;
             if (mPick)
                 draw.mBrush = mPickColor;
             else
