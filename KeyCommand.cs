@@ -1,6 +1,5 @@
 ﻿using CoreLib;
 using Brush = System.Windows.Media.Brush;
-using Brushes = System.Windows.Media.Brushes;
 
 namespace Cad3DApp
 {

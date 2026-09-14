@@ -1,4 +1,5 @@
 ﻿using CoreLib;
+using Microsoft.WindowsAPICodePack.Shell;
 using OpenTK;
 using System.IO;
 using System.Windows;
@@ -30,6 +31,7 @@ namespace Cad3DApp
         public string mAppName = "Cad3DApp";                //  アプリ名
         private Canvas mCurCanvas;                          //  描画キャンバス
         private System.Windows.Controls.Image mCurImage;    //  描画イメージ
+        private string mHelpFile = "Cad3DApp_Manual.pdf";   //  PDFのヘルプファイル
 
         public double[] mGridSizeMenu = {                   //  グリッドサイズメニュー
             0, 0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 10,
@@ -780,6 +782,9 @@ namespace Cad3DApp
             } else if (button.Name.CompareTo("btSetting") == 0) {
                 //  システム設定
                 mDataManage.commandExec(OPERATION.systemProperty);
+            } else if (button.Name.CompareTo("btHelp") == 0) {
+                //  ヘルプ
+                ylib.openUrl(mHelpFile);
             }
         }
 
@@ -851,34 +856,35 @@ namespace Cad3DApp
 
             if (mDataManage.mGlobal.mFace == FACE3D.NON) {
                 // 3D表示
-                m3Dlib.keyMove(key, control, shift);
+                m3Dlib.keyMove(key, control, shift);                                //  3D表示操作
                 renderFrame();
             } else {
                 //  2D表示
                 if (control) {
                     switch (key) {
-                        case Key.S: mDataManage.commandExec(OPERATION.save); break;
-                        case Key.Z: mDataManage.commandExec(OPERATION.undo); break;
+                        case Key.S: mDataManage.commandExec(OPERATION.save); break; //  保存
+                        case Key.Y: mDataManage.commandExec(OPERATION.redo); break; //  リドウ
+                        case Key.Z: mDataManage.commandExec(OPERATION.undo); break; //  アンドウ
                         default:
                             mDataManage.mDataDraw.key2DMove(key, control, shift);
                             break;
                     }
                 } else {
                     switch (key) {
-                        case Key.F2:                                 //  領域拡大
+                        case Key.F2:                                                //  領域拡大
                             mPrevOpeMode = mOperationMode;
                             mOperationMode = OPEMODE.areaDisp;
                             break;
-                        case Key.F7:                                 //  領域ピック
+                        case Key.F7:                                                //  領域ピック
                             if (mOperationMode == OPEMODE.pick) {
                                 mPrevOpeMode = mOperationMode;
                                 mOperationMode = OPEMODE.areaPick;
                             }
                             break;
-                        case Key.F12: cbCommand.Focus(); break;     //  コマンド入力ぽっくにフォーカス
-                        case Key.Escape: mDataManage.commandClear(); break; //  ESCキーでキャンセル
-                        case Key.Back: mDataManage.backLoc(); break;        //  ロケイト点を一つ戻す
-                        case Key.Apps:                                      //  コンテキストメニューキー
+                        case Key.F12: cbCommand.Focus(); break;                     //  コマンド入力ぽっくにフォーカス
+                        case Key.Escape: mDataManage.commandClear(); break;         //  ESCキーでキャンセル
+                        case Key.Back: mDataManage.backLoc(); break;                //  ロケイト点を一つ戻す
+                        case Key.Apps:                                              //  コンテキストメニューキー
                             if (mDataManage.locMenu()) {
                                 if (mDataManage.definData(false, ylib.onAltKey()))
                                     commandCancel();
@@ -887,7 +893,7 @@ namespace Cad3DApp
                             }
                             break;
                         default: 
-                            mDataManage.mDataDraw.key2DMove(key, control, shift);
+                            mDataManage.mDataDraw.key2DMove(key, control, shift);   //  2D表示操作
                             break;
                     }
                 }

@@ -245,7 +245,8 @@ namespace Cad3DApp
             if (button.Name.CompareTo("btNew") == 0) {
                 newScript();
             } else if (button.Name.CompareTo("btOpen") == 0) {
-                //selectLoad();
+                selectLoad();
+                setScriptFilrList(mScriptFolder);
             } else if (button.Name.CompareTo("btSave") == 0) {
                 save();
             } else if (button.Name.CompareTo("btSaveAs") == 0) {
@@ -492,6 +493,22 @@ namespace Cad3DApp
                 setHash(avalonEditor.Text);
                 setScriptFilrList(mScriptFolder);
                 setTitle();
+            }
+        }
+
+        /// <summary>
+        /// ファイルを選択して読み込む
+        /// </summary>
+        private void selectLoad()
+        {
+            closeCheck();
+            List<string[]> filters = new List<string[]>() {
+                new string[] { "scファイル", "*.sc" }, new string[] { "全ファイル", "*.*" }
+            };
+            string path = ylib.fileOpenSelectDlg("ファイル選択", mScriptFolder, filters);
+            if (path != null && 0 < path.Length) {
+                mScriptFolder = Path.GetDirectoryName(path);
+                loadScript(path);
             }
         }
 

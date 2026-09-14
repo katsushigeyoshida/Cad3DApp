@@ -84,7 +84,14 @@ OpenGL を使う
 ・情報 (未)
 ・削除
 ・アンドゥ
+・リドゥ
 ・ツール (未)
+    画面コピー
+    画面保存
+    トリミング
+    スクリプト編集
+    スクリプト実行
+    メモ
 ・キャンセル
 ・終了
 
@@ -134,6 +141,7 @@ OpenGL を使う
 ピック(Pickモード)
     Right Button        pick    multi entity → 要素選択メニュー ピック済み要素 → unpick
     Ctrl Right Button   group pick
+    Alt Right Bitton    not unpick
     F7 Left Button      領域ピック
 
 Double CLick            要素属性変更
@@ -175,6 +183,26 @@ redo 				        	                リドゥ
 (close)                                         終了
 
 
+■スクリプト関数
+cad.disp();                                                 表示
+cad.setColor("Blue");                                       色の設定
+cad.setLineType("dash");                                    線種の設定("solid", "dash", "center", "phantom")
+cad.setLineThickness(2);                                    線の太さの設定
+cad.setFace("xy");                                          作成面の設定(front", "top", "right")
+cad.line(xs,ys,zs,xe,ye,ze);                                線分を作成
+cad.line(sp[],ep[]);                                        線分を作成
+cad.arc(cp[],r[,sa[,ea]]);                                  円/円弧の作成
+cad.arc(sp[],mp[],ep);                                      三点円弧の作成
+cad.circle(sp[],mp[],ep);                                   三点円の作成
+cad.polyline(p[,]);                                         ポリラインの作成
+cad.polygon(p[,]);                                          ポリゴンの作成
+cad.extrusion(v[],p[,][,p1[,]...]);                         押出要素の作成
+cad.blend(p[,][,p1[,]...]);                                 ブレンドの作成
+cad.revolution(centerlin[,],polylin[,][,sa[,ea[,close]]]);  回転体の作成
+cad.sweep(polyline0[,],polyline1[,][,sa[,ea[,close]]]);     掃引の作成
+
+
+
 
 問題点
     円弧同士の交点
@@ -185,6 +213,7 @@ redo 				        	                リドゥ
     円弧要素のデータ情報の表示をどう表すか(平面上の角度では位置が不明)
     Blend での端面と側面の面方向が合わない
     PolylineのストレッチでPolylineの面とストレッチの方向が異なるとストレッチできない
+    2Dでのデータ作成や表示が遅い、特に3D化のドラッギング表示
 
 3D上の平面
     要素同士の平面が同じかどうかは面の沿直線の向きで判定
@@ -200,3 +229,8 @@ redo 				        	                リドゥ
 
 マクロ機能の組み込み
     スクリプト機能(kscript)のライブラリ化
+    スクリプトの実行
+    GUIカスタム入力機能
+
+追加機能
+    データの初期化

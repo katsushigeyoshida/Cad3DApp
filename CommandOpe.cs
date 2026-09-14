@@ -94,6 +94,7 @@ namespace Cad3DApp
                 case OPERATION.imageTrimming: opeMode = OPEMODE.clear; break;
                 case OPERATION.memo: opeMode = zumenMemo(); break;
                 case OPERATION.scriptEdit: opeMode = scriptEdit(); break;
+                case OPERATION.scriptExecute: opeMode = scriptExecute(); break;
                 case OPERATION.back: opeMode = OPEMODE.clear; break;
                 case OPERATION.save: opeMode = OPEMODE.exec; break;
                 case OPERATION.cancel: opeMode = OPEMODE.clear; break;
@@ -127,6 +128,12 @@ namespace Cad3DApp
         {
             if (1 < picks.Count) {
                 List<Entity> entityList = mEditEntity.revolution(picks, 0, Math.PI * 2,true);
+                for (int i = 0; i < picks.Count; i++) {
+                    if (mEntityList[picks[i].mEntityNo].mID == EntityId.Line) {
+                        picks.RemoveAt(i);
+                        break;
+                    }
+                }
                 addEntity(entityList, picks);
             }
             return OPEMODE.clear;
@@ -585,6 +592,12 @@ namespace Cad3DApp
                 mScriptEdit.Close();
             mScriptEdit = new ScriptEdit(mEntityList, mGlobal);
             mScriptEdit.Show();
+            return OPEMODE.clear;
+        }
+
+        public OPEMODE scriptExecute()
+        {
+
             return OPEMODE.clear;
         }
 
