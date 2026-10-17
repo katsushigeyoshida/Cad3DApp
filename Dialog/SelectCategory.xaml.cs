@@ -21,6 +21,8 @@ namespace Cad3DApp
         public string mSelectCategory = "";                 //  選択Category
 
         private YLib ylib = new YLib();
+        private YFile yfile = new YFile();
+
 
         public SelectCategory()
         {
@@ -112,7 +114,7 @@ namespace Cad3DApp
         /// </summary>
         private void getGenreList()
         {
-            mGenreList = ylib.getDirectories(mRootFolder);
+            mGenreList = yfile.getDirectories(mRootFolder);
             cbGenre.ItemsSource = mGenreList.ConvertAll(x => Path.GetFileName(x));
             if (0 < cbGenre.Items.Count)
                 cbGenre.SelectedIndex = 0;
@@ -126,7 +128,7 @@ namespace Cad3DApp
             int genreIndex = cbGenre.SelectedIndex < 0 ? 0 : cbGenre.SelectedIndex;
             string genre = cbGenre.Items[genreIndex].ToString();
             string categroryPath = Path.Combine(mRootFolder, genre);
-            mCategoryList = ylib.getDirectories(categroryPath);
+            mCategoryList = yfile.getDirectories(categroryPath);
             lbCategory.ItemsSource = mCategoryList.ConvertAll(x => Path.GetFileName(x));
         }
     }

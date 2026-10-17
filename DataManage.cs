@@ -66,6 +66,7 @@ namespace Cad3DApp
         private int mFirstEntityCount = 0;                      //  編集開始時の要素数
 
         private YLib ylib = new YLib();
+        private YFile yfile = new YFile();
 
         /// <summary>
         /// コンストラクタ
@@ -1124,7 +1125,7 @@ namespace Cad3DApp
         {
             if (!File.Exists(path))
                 return;
-            List<string[]> dataList = ylib.loadCsvData(path);
+            List<string[]> dataList = yfile.loadCsvData(path);
             if (2 > dataList.Count) return;
             clear();
             int sp = 0;
@@ -1189,7 +1190,7 @@ namespace Cad3DApp
             dataList.AddRange(toDataList());
             dataList.AddRange(mDataDraw.toDataList());
             dataList.AddRange(toEntityDataList());
-            ylib.saveCsvData(path, dataList);
+            yfile.saveCsvData(path, dataList);
         }
 
         /// <summary>
@@ -1203,7 +1204,7 @@ namespace Cad3DApp
                     //new string[] { "DXFファイル", "*.dxf" },
                     new string[] { "すべてのファイル", "*.*"}
                 };
-            string path = ylib.fileOpenSelectDlg("インポート", ".", filters);
+            string path = yfile.fileOpenSelectDlg("インポート", ".", filters);
             if (0 < path.Length) {
                 mDataPath = Path.Combine(categoryPath, Path.GetFileName(path));
                 string fname = Path.GetFileNameWithoutExtension(path);

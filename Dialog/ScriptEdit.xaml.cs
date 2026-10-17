@@ -37,6 +37,7 @@ namespace Cad3DApp
         private FuncCad mFuncCad;
         private Snippet mSnippet = new Snippet();   //  スニペット
         private YLib ylib = new YLib();
+        private YFile yfile = new YFile();
 
         public ScriptEdit(List<Entity> entityList, GlobalData global)
         {
@@ -166,7 +167,7 @@ namespace Cad3DApp
         /// <param name="e"></param>
         private void cbScriptFile_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            string folder = ylib.folderSelect("フォルダ選択", ".");
+            string folder = yfile.folderSelect("フォルダ選択", ".");
             setScriptFilrList(folder);
         }
 
@@ -199,14 +200,14 @@ namespace Cad3DApp
             if (0 < mScriptPath.Length && File.Exists(mScriptPath)) {
                 if (menuItem.Name.CompareTo("cbScriptFileCopyMenu") == 0) {
                     //  ファイルコピー
-                    string destFolder = ylib.folderSelect("コピー先フォルダ", mScriptFolder);
+                    string destFolder = yfile.folderSelect("コピー先フォルダ", mScriptFolder);
                     if (0 < destFolder.Length) {
                         string destPath = Path.Combine(destFolder, Path.GetFileName(mScriptPath));
                         File.Copy(mScriptPath, destPath);
                     }
                 } else if (menuItem.Name.CompareTo("cbScriptFileMoveMenu") == 0) {
                     //  ファイル移動
-                    string destFolder = ylib.folderSelect("移動先フォルダ", mScriptFolder);
+                    string destFolder = yfile.folderSelect("移動先フォルダ", mScriptFolder);
                     if (0 < destFolder.Length) {
                         string destPath = Path.Combine(destFolder, Path.GetFileName(mScriptPath));
                         File.Move(mScriptPath, destPath);
@@ -355,7 +356,7 @@ namespace Cad3DApp
         {
             if (0 < folder.Length) {
                 mScriptFolder = folder;
-                string[] files = ylib.getFiles(Path.Combine(folder, "*.sc"));
+                string[] files = yfile.getFiles(Path.Combine(folder, "*.sc"));
                 cbScriptFile.Items.Clear();
                 foreach (string file in files) {
                     cbScriptFile.Items.Add(Path.GetFileNameWithoutExtension(file));
@@ -458,7 +459,7 @@ namespace Cad3DApp
         private void loadScript(string path)
         {
             if (!File.Exists(path) || Path.GetExtension(path).ToLower() != ".sc") return;
-            string text = ylib.loadTextFile(path);
+            string text = yfile.loadTextFile(path);
             mScriptPath = path;
             avalonEditor.Text = text;
             setHash(text);
@@ -471,7 +472,7 @@ namespace Cad3DApp
         private void save()
         {
             if (0 < mScriptPath.Length) {
-                ylib.saveTextFile(mScriptPath, avalonEditor.Text);
+                yfile.saveTextFile(mScriptPath, avalonEditor.Text);
                 setHash(avalonEditor.Text);
             } else
                 saveAs();
@@ -483,12 +484,12 @@ namespace Cad3DApp
         private void saveAs()
         {
             List<string[]> filters = new List<string[]>() { new string[] { "scファイル", "*.sc" } };
-            mScriptPath = ylib.fileSaveSelectDlg("ファイル保存", mScriptFolder, filters);
+            mScriptPath = yfile.fileSaveSelectDlg("ファイル保存", mScriptFolder, filters);
             if (0 < mScriptPath.Length) {
                 string ext = Path.GetExtension(mScriptPath);
                 if (ext == "")
                     mScriptPath += ".sc";
-                ylib.saveTextFile(mScriptPath, avalonEditor.Text);
+                yfile.saveTextFile(mScriptPath, avalonEditor.Text);
                 mScriptFolder = Path.GetDirectoryName(mScriptPath);
                 setHash(avalonEditor.Text);
                 setScriptFilrList(mScriptFolder);
@@ -505,7 +506,7 @@ namespace Cad3DApp
             List<string[]> filters = new List<string[]>() {
                 new string[] { "scファイル", "*.sc" }, new string[] { "全ファイル", "*.*" }
             };
-            string path = ylib.fileOpenSelectDlg("ファイル選択", mScriptFolder, filters);
+            string path = yfile.fileOpenSelectDlg("ファイル選択", mScriptFolder, filters);
             if (path != null && 0 < path.Length) {
                 mScriptFolder = Path.GetDirectoryName(path);
                 loadScript(path);

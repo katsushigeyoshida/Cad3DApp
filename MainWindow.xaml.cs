@@ -58,6 +58,8 @@ namespace Cad3DApp
         public GL3DLib m3Dlib;                              //  三次元表示ライブラリ
         private GLControl glControl;                        //  OpenTK.GLcontrol
         private YLib ylib = new YLib();
+        private YMath ymath = new YMath();
+
 
         public MainWindow()
         {
@@ -357,7 +359,7 @@ namespace Cad3DApp
                 wpos = mDataManage.areaDragging(new PointD(pos), mOperationMode);
             } else if (mMouseLeftButtonDown && ylib.onControlKey()) {
                 //  2Dスクロール
-                if (mMouseScroolSize < ylib.distance(pos, mPreMousePos)) {
+                if (mMouseScroolSize < ymath.distance(pos, mPreMousePos)) {
                     wpos = mDataManage.scroll(new PointD(pos), new PointD(mPreMousePos));
                 } else
                     return;

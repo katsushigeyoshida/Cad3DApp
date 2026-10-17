@@ -16,6 +16,7 @@ namespace Cad3DApp
         private GlobalData mGlobal;
 
         private YLib ylib = new YLib();
+        private YFile yfile = new YFile();
 
         /// <summary>
         /// コンストラクタ
@@ -57,7 +58,7 @@ namespace Cad3DApp
         /// <returns></returns>
         public List<string> getGenreList()
         {
-            List<string> genreList = ylib.getDirectories(mGlobal.mBaseDataFolder);
+            List<string> genreList = yfile.getDirectories(mGlobal.mBaseDataFolder);
             if (genreList != null) {
                 genreList.Sort();
                 genreList = genreList.ConvertAll(p => ylib.getLastFolder(p, 1));
@@ -73,7 +74,7 @@ namespace Cad3DApp
         {
             List<string> categoryList = new List<string>();
             try {
-                categoryList = ylib.getDirectories(getCurGenrePath());
+                categoryList = yfile.getDirectories(getCurGenrePath());
                 if (categoryList != null) {
                     categoryList.Sort();
                     categoryList = categoryList.ConvertAll(p => ylib.getLastFolder(p, 1));
@@ -92,7 +93,7 @@ namespace Cad3DApp
         {
             List<string> fileNameList = new List<string>();
             try {
-                string[] files = ylib.getFiles(getCurCategoryPath() + "\\*.csv");
+                string[] files = yfile.getFiles(getCurCategoryPath() + "\\*.csv");
                 if (files != null) {
                     for (int i = 0; i < files.Length; i++) {
                         fileNameList.Add(Path.GetFileNameWithoutExtension(files[i]));
@@ -369,7 +370,7 @@ namespace Cad3DApp
                 if (move) {
                     Directory.Move(oldCategoryPath, newCategoryPath);
                 } else {
-                    ylib.copyDrectory(oldCategoryPath, newCategoryPath);
+                    yfile.copyDrectory(oldCategoryPath, newCategoryPath);
                 }
                 return true;
             }

@@ -26,6 +26,7 @@ namespace Cad3DApp
         private List<string> mDataFolderList = new List<string>();      //  データフォルダパスリスト
 
         private YLib ylib = new YLib();
+        private YFile yfile = new YFile();
 
         public SystemDlg()
         {
@@ -43,7 +44,7 @@ namespace Cad3DApp
             int colorIndex = ylib.getBrushNo(mBackColor);
             if (0 <= colorIndex)
                 cbBackColor.SelectedIndex = colorIndex;
-            List<string[]> llistf = ylib.loadCsvData(mDataFolderListPath);
+            List<string[]> llistf = yfile.loadCsvData(mDataFolderListPath);
             foreach (var buf in llistf) {
                 if (!mDataFolderList.Contains(buf[0]))
                     mDataFolderList.Add(buf[0]);
@@ -61,19 +62,19 @@ namespace Cad3DApp
             List<string[]> llist = new List<string[]>();
             foreach (var buf in mDataFolderList)
                 llist.Add([buf]);
-            ylib.saveCsvData(mDataFolderListPath, llist);
+            yfile.saveCsvData(mDataFolderListPath, llist);
         }
 
         private void tbDataFolder_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            string folder = ylib.folderSelect("データフォルダ", mDataFolder);
+            string folder = yfile.folderSelect("データフォルダ", mDataFolder);
             if (folder != null && 0 < folder.Length)
                 cbDataFolder.Text = folder;
         }
 
         private void tbBackupFolder_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            string folder = ylib.folderSelect("バックアップフォルダ", mBackupFolder);
+            string folder = yfile.folderSelect("バックアップフォルダ", mBackupFolder);
             if (folder != null && 0 < folder.Length)
                 tbBackupFolder.Text = folder;
         }
@@ -84,7 +85,7 @@ namespace Cad3DApp
                     new string[] { "実行ファイル", "*.exe" },
                     new string[] { "すべてのファイル", "*.*"}
                 };
-            string filePath = ylib.fileOpenSelectDlg("ツール選択", Path.GetDirectoryName(mDiffTool), filters);
+            string filePath = yfile.fileOpenSelectDlg("ツール選択", Path.GetDirectoryName(mDiffTool), filters);
             if (0 < filePath.Length)
                 tbDiffTool.Text = filePath;
         }
