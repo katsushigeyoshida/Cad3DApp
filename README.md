@@ -1,10 +1,55 @@
 # Cad3DApp
 ## 三面図からつくる三次元ＣＡＤ
 
+
 平面図や側面図で作成した図形から3D図形を作成する三次元CAD  
+当初、サーフェースのグラフィックライブラリを自作して作っていたが描画速度や機能的に限界があったので OpenGL を使って作成。  
+使い方などは[説明書](Document/Cad3DApp_Manual.pdf)を参照。  
 Mini3DCadのソースを見直して再作成したもので機能的にはMini3DCadとほとんど同じ
 
 <img src="Image/MainWindow.png" width="80%">
+
+### 画面
+2D表示    
+<img src="Image/MainWindow6pSw2D.png" width="80%">  
+
+3D表示  
+<img src="Image/MainWindow6pSw3D.png" width="80%">  
+
+2Dデータから3Dデータの作成(押出)  
+<img src="Image/2Dデータの3Dに変換.png" width="80%">  
+
+スピーカ端子(2D)　　
+<img src="Image/SP端子2D.png" width="80%">  
+スピーカ端子(3D)　　
+<img src="Image/SP端子3D.png" width="80%">  
+
+
+ティーカップ(2D)　　
+<img src="Image/ティーカップ2D.png" width="80%">  
+
+ティーカップ(3D化)　　
+<img src="Image/ティーカップ2D→3D.png" width="80%">  
+
+ティーカップ(3D)　　
+<img src="Image/ティーカップ3D.png" width="80%">  
+
+スピーカ(正面図、側面図)  
+<img src="Image/FLAT6正面2D.png" width="50%"><img src="Image/FLAT6側面2D.png" width="50%">  
+
+スピーカ(3D)
+<img src="Image/FLAT6_3D.png" width="80%">  
+
+バックロードホーン(2D)  
+<img src="Image/バックロードホーン2D.png" width="80%">  
+バックロードホーン(3D)  
+<img src="Image/バックロードホーン3D.png" width="80%">  
+
+電解コンデンサ(3D)  
+<img src="Image/電解コンデンサ.png" width="80%">  
+
+電源トランス(3D)  
+<img src="Image/電源トランス.png" width="80%">  
 
 
 ### 履歴
